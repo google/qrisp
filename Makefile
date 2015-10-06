@@ -1,6 +1,6 @@
 
 #$HOME/google_libs/bin/protoc *.proto --cpp_out=./
-VPATH=src:src/proto
+VPATH=third_party:third_party/proto
 
 LIB_PATHS=/usr/local/google/home/fdb/google_libs/lib
 LIBS=-lglog -lprotobuf -lgflags
@@ -40,7 +40,7 @@ parameters.pb.o\
 structure.pb.o
 
 qrisp: ${OBJS}
-	${CC} ${CPPFLAGS} src/qrisp-train.cc -o qrisp-train ${OBJS} -I${INCL} -L${LIB_PATHS} ${LIBS}
+	${CC} ${CPPFLAGS} third_party/qrisp-train.cc -o qrisp-train ${OBJS} -I${INCL} -L${LIB_PATHS} ${LIBS}
 
 .cc.o:
 	$(CC) -c $(CPPFLAGS) -I${INCL} -o $@ $<
