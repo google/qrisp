@@ -1,0 +1,35 @@
+syntax = "proto2";
+
+package qrisp;
+
+// This protocol buffer represents one RNA secondary structure.
+message RNASStructure {
+  // Encodes the structure in terms of base pairs.
+  repeated int32 pair = 1;
+  // The sequence of nucleotides.
+  repeated int32 base = 2;
+  // Position-wise confidence values.
+  repeated float confidence = 3;
+  // An optional description of the structure.
+  optional string description = 4;
+  // Bracket representation of the structure
+  optional string brackets = 5;
+  // Bracket representation of the structure
+  optional string sequence = 6;
+}
+
+message Description {
+  optional bool valid = 1;
+}
+
+message RNASStructures {
+  //
+  message Instance {
+    //
+    required RNASStructure structure = 1;
+    //
+    required Description description = 2;
+  }
+  //
+  repeated Instance instance = 3;
+}

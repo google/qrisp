@@ -1,0 +1,73 @@
+syntax = "proto2";
+
+package qrisp;
+
+message PerformanceData {
+  optional int32 iteration = 1;
+
+  optional double sensitivity = 2;
+
+  optional double specificity = 3;
+
+  optional int32 cluster_size = 4;
+}
+
+message PerformanceProto {
+  repeated PerformanceData data = 1;
+}
+
+// Next id: 18
+message TrainingConfiguration {
+  //
+  optional bool enable_quality_features = 1;
+
+  //
+  optional bool plot_features = 2;
+
+  //
+  optional bool visualize_training = 3;
+
+  // The learning rate that will be used in training.
+  optional double epsilon = 4;
+
+  // The learning rate that will be used in training.
+  optional double learning_rate = 5;
+
+  // The factor in front of the regularization part of the objective function.
+  optional double regularization_coeff = 6;
+
+  // The file name th
+  optional string config_fn = 7;
+
+  // The location of the sstable that contains the training data.
+  optional string input_sstable = 8;
+
+  // The file name the model will be stored under (as a ProtoBuffer).
+  optional string model_fn = 9;
+
+  // The file name the model will be stored under (as a ProtoBuffer).
+  optional string pretrained_model_fn = 10;
+
+  // The file name of the file holding a list of files that shall be used in
+  // training.
+  optional string split_fn = 11;
+
+  // The file name of the file holding a list of files that shall be used in
+  // training.
+  optional string holdout_fn = 12;
+
+  // The file name the model will be stored under (as a ProtoBuffer).
+  optional string result_dir = 13;
+
+  // The maximum number of iterations/passes through the whole dataset.
+  optional int32 max_iter = 14;
+
+  //
+  repeated PerformanceData training_performance = 15;
+
+  //
+  repeated PerformanceData holdout_performance = 16;
+
+  //
+  repeated int32 nbest_values = 17;
+}
