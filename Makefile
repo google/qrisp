@@ -45,4 +45,5 @@ qrisp: ${OBJS}
 .cc.o:
 	$(CC) -c $(CPPFLAGS) -I${INCL} -o $@ $<
 
-
+clean:
+	rm -f *.o
