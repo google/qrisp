@@ -40,7 +40,7 @@ parameters.pb.o\
 structure.pb.o
 
 qrisp: ${OBJS}
-	${CC} ${CPPFLAGS} third_party/qrisp-train.cc -o qrisp-train ${OBJS} -I${INCL} -L${LIB_PATHS} ${LIBS}
+	${CC} ${CPPFLAGS} third_party/qrisp.cc -o qrisp ${OBJS} -I${INCL} -L${LIB_PATHS} ${LIBS}
 
 .cc.o:
 	$(CC) -c $(CPPFLAGS) -I${INCL} -o $@ $<
