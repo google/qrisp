@@ -1,49 +1,34 @@
+# Makefile for the QRisp project.
+VPATH=third_party
 
-#$HOME/google_libs/bin/protoc *.proto --cpp_out=./
-VPATH=third_party:third_party/proto
-
-LIB_PATHS=/usr/local/google/home/fdb/google_libs/lib
 LIBS=-lglog -lprotobuf -lgflags
-INCL=/usr/local/google/home/fdb/google_libs/include
 
-CC=g++
-CPPFLAGS=--std=c++11
+PROTOC=protoc
+PROTOCFLAGS=--cpp_out=third_party
 
-SRC=cluster.cc\
-dataset-utils.cc\
-learning-utils.cc\
-model.cc\
-performance.cc\
-plif.cc\
-recurrences-nbest.cc\
-recurrences.cc\
-rna-structure.cc\
-sgd.cc\
-utils.cc\
-config.pb.cc\
-parameters.pb.cc\
-structure.pb.cc
+CXX=g++
+CXXFLAGS=--std=c++11
 
-OBJS=cluster.o\
-dataset-utils.o\
-learning-utils.o\
-model.o\
-performance.o\
-plif.o\
-recurrences-nbest.o\
-recurrences.o\
-rna-structure.o\
-sgd.o\
-utils.o\
-config.pb.o\
-parameters.pb.o\
-structure.pb.o
+SOURCES=$(wildcard *.cc)
+HEADERS=$(wildcard *.h)
+PROTOS=$(wildcard *.proto)
 
-qrisp: ${OBJS}
-	${CC} ${CPPFLAGS} third_party/qrisp.cc -o qrisp ${OBJS} -I${INCL} -L${LIB_PATHS} ${LIBS}
+OBJECTS=$(SOURCES:%.cc=%.o)
+
+PBS=$(PROTOS:%.proto=%.pb)
+
+qrisp: protos ${OBJECTS}
+	${CXX} ${CXXFLAGS} third_party/qrisp.cc -o qrisp ${OBJECTS} ${LIBS}
+
+protos: ${PBS}
+	@ echo ${PROTOS}
 
 .cc.o:
-	$(CC) -c $(CPPFLAGS) -I${INCL} -o $@ $<
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
+%.pb: %.proto
+	${PROTOC} ${PROTOCFLAGS} $*.proto
+	${CXX} ${CXXFLAGS} -c -o $*.pb.o $*.pb.cc
 
 clean:
 	rm -f *.o
