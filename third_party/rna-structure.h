@@ -17,7 +17,7 @@
 #define QRISP_RNA_STRUCTURE_H__
 
 #include <glog/logging.h>
-#include "proto/structure.pb.h"
+#include "structure.pb.h"
 #include "utils.h"
 
 #include <string>

@@ -19,7 +19,7 @@
 #include <set>
 
 #include "plif.h"
-#include "proto/parameters.pb.h"
+#include "parameters.pb.h"
 #include "utils.h"
 #include <gflags/gflags.h>
 

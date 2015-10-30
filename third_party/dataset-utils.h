@@ -22,8 +22,8 @@
 #include <fstream>
 #include <vector>
 
-#include "proto/parameters.pb.h"
-#include "proto/structure.pb.h"
+#include "parameters.pb.h"
+#include "structure.pb.h"
 #include "rna-structure.h"
 #include "utils.h"
 
