@@ -16,16 +16,16 @@
 #ifndef QRISP_DATASET_UTILS_H_
 #define QRISP_DATASET_UTILS_H_
 
+#include "parameters.pb.h"
+#include "proto/structure.pb.h"
+#include "rna-structure.h"
+#include "utils.h"
+
 #include <algorithm>
 #include <string>
 #include <utility>
 #include <fstream>
 #include <vector>
-
-#include "parameters.pb.h"
-#include "proto/structure.pb.h"
-#include "rna-structure.h"
-#include "utils.h"
 
 namespace qrisp {
 

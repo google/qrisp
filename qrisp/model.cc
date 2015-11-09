@@ -14,13 +14,12 @@
 // limitations under the License.
 
 #include "model.h"
-
-#include <functional>
-#include <set>
-
 #include "plif.h"
 #include "proto/parameters.pb.h"
 #include "utils.h"
+
+#include <functional>
+#include <set>
 #include <gflags/gflags.h>
 
 //#define _SHOW_STATES_

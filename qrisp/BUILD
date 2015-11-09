@@ -1,19 +1,17 @@
-cc_library(
-    name = "sgd",
-    srcs = ["sgd.cc"],
-    hdrs = ["sgd.h"],
-)
+#
+#
+#
 
 cc_library(
     name = "dataset-utils",
     srcs = ["dataset-utils.cc"],
     hdrs = ["dataset-utils.h"],
-)
-
-cc_library(
-    name = "learning-utils",
-    srcs = ["learning-utils.cc"],
-    hdrs = ["learning-utils.h"],
+    deps = [
+        "//qrisp:rna-structure",
+        "//qrisp:utils",
+        "//qrisp/proto:parameters_proto",
+        "//qrisp/proto:structure_proto",
+    ],
 )
 
 cc_library(
@@ -21,6 +19,7 @@ cc_library(
     srcs = ["rna-structure.cc"],
     hdrs = ["rna-structure.h"],
     deps = [
+        "//qrisp:utils",
         "//qrisp/proto:structure_proto",
     ],
 )
@@ -29,12 +28,24 @@ cc_library(
     name = "performance",
     srcs = ["performance.cc"],
     hdrs = ["performance.h"],
+    deps = [
+        "//qrisp:cluster",
+        "//qrisp:dataset-utils",
+        "//qrisp:rna-structure",
+        "//qrisp:utils",
+        "//qrisp/proto:config_proto",
+    ],
 )
 
 cc_library(
     name = "model",
     srcs = ["model.cc"],
     hdrs = ["model.h"],
+    deps = [
+        "//qrisp:rna-structure",
+        "//qrisp:utils",
+        "//qrisp/proto:parameters_proto",
+    ],
 )
 
 cc_library(
@@ -47,6 +58,9 @@ cc_library(
     name = "plif",
     srcs = ["plif.cc"],
     hdrs = ["plif.h"],
+    deps = [
+        "//qrisp:utils",
+    ],
 )
 
 cc_library(
@@ -59,12 +73,37 @@ cc_library(
         "recurrences.h",
         "recurrences-nbest.h",
     ],
+    deps = [
+        "//qrisp:model",
+        "//qrisp:utils",
+    ],
 )
 
 cc_library(
     name = "cluster",
     srcs = ["cluster.cc"],
     hdrs = ["cluster.h"],
+)
+
+# Machine learning related libaries.
+#
+
+cc_library(
+    name = "learning-utils",
+    srcs = ["learning-utils.cc"],
+    hdrs = ["learning-utils.h"],
+    deps = [
+        "//qrisp:utils",
+    ],
+)
+
+cc_library(
+    name = "sgd",
+    srcs = ["sgd.cc"],
+    hdrs = ["sgd.h"],
+    deps = [
+        "//qrisp:learning-utils",
+    ],
 )
 
 #
@@ -75,7 +114,8 @@ cc_binary(
     name = "qrisp",
     srcs = ["qrisp.cc"],
     deps = [
-        ":cluster",
+        ":dataset-utils",
         ":recurrences",
+        ":utils",
     ],
 )

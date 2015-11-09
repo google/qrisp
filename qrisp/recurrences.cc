@@ -13,9 +13,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "model.h"
 #include "recurrences.h"
-#include "utils.h"
 
 //#define _SHOW_STATES_
 #ifdef _SHOW_STATES_

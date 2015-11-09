@@ -16,10 +16,10 @@
 #ifndef QRISP_RNA_STRUCTURE_H__
 #define QRISP_RNA_STRUCTURE_H__
 
-#include <glog/logging.h>
-#include "proto/structure.pb.h"
+#include "qrisp/proto/structure.pb.h"
 #include "utils.h"
 
+#include <glog/logging.h>
 #include <string>
 #include <vector>
 
