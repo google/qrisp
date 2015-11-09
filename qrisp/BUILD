@@ -20,6 +20,9 @@ cc_library(
     name = "rna-structure",
     srcs = ["rna-structure.cc"],
     hdrs = ["rna-structure.h"],
+    deps = [
+        "//qrisp/proto:structure_proto",
+    ],
 )
 
 cc_library(
@@ -63,6 +66,10 @@ cc_library(
     srcs = ["cluster.cc"],
     hdrs = ["cluster.h"],
 )
+
+#
+# The main binary of the project.
+#
 
 cc_binary(
     name = "qrisp",

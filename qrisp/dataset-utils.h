@@ -23,7 +23,7 @@
 #include <vector>
 
 #include "parameters.pb.h"
-#include "structure.pb.h"
+#include "proto/structure.pb.h"
 #include "rna-structure.h"
 #include "utils.h"
 
