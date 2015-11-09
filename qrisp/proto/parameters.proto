@@ -1,7 +1,5 @@
 syntax = "proto2";
 
-import "config.proto";
-
 package qrisp;
 
 message Features {
@@ -921,17 +919,4 @@ message Features {
     PLIF2D_OFFSET = 2000;
     PLIF_INCREMENT = 40;
   }
-}
-
-// This protocol buffer stores a model of the QRSP project. It contains features
-// represented by a unique integer id and a feature value.
-message QRSPModel {
-  //
-  message Feature {
-    required int32 id = 1;
-    required double value = 2;
-  }
-  repeated Feature feature = 1;
-
-  repeated PerformanceData holdout_performance = 2;
 }

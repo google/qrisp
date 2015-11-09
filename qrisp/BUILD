@@ -86,7 +86,6 @@ cc_library(
 )
 
 # Machine learning related libaries.
-#
 
 cc_library(
     name = "learning-utils",

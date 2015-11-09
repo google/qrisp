@@ -16,8 +16,8 @@
 #ifndef QRISP_DATASET_UTILS_H_
 #define QRISP_DATASET_UTILS_H_
 
-#include "parameters.pb.h"
-#include "proto/structure.pb.h"
+#include "qrisp/proto/parameters.pb.h"
+#include "qrisp/proto/structure.pb.h"
 #include "rna-structure.h"
 #include "utils.h"
 

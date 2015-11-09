@@ -15,7 +15,7 @@
 
 #include "model.h"
 #include "plif.h"
-#include "proto/parameters.pb.h"
+#include "qrisp/proto/parameters.pb.h"
 #include "utils.h"
 
 #include <functional>

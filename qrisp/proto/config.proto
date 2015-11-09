@@ -71,3 +71,16 @@ message TrainingConfiguration {
   //
   repeated int32 nbest_values = 17;
 }
+
+// This protocol buffer stores a model of the QRSP project. It contains features
+// represented by a unique integer id and a feature value.
+message QRSPModel {
+  //
+  message Feature {
+    required int32 id = 1;
+    required double value = 2;
+  }
+  repeated Feature feature = 1;
+
+  repeated PerformanceData holdout_performance = 2;
+}

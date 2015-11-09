@@ -16,7 +16,7 @@
 #ifndef QRISP_PERFORMANCE_H_
 #define QRISP_PERFORMANCE_H_
 
-#include "proto/config.pb.h"
+#include "qrisp/proto/config.pb.h"
 #include "utils.h"
 
 namespace qrisp {
