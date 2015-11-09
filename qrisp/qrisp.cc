@@ -17,17 +17,17 @@
 #include <cmath>
 #include <string>
 #include <sstream>
+#include <gflags/gflags.h>
 
 #include "dataset-utils.h"
 #include "model.h"
 #include "performance.h"
-#include "proto/config.pb.h"
+#include "qrisp/proto/config.pb.h"
 #include "recurrences-nbest.h"
 #include "recurrences.h"
 #include "rna-structure.h"
 #include "sgd.h"
 #include "utils.h"
-#include <gflags/gflags.h>
 
 DECLARE_bool(enable_quality_features);
 

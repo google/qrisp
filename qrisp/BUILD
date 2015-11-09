@@ -42,6 +42,7 @@ cc_library(
     srcs = ["model.cc"],
     hdrs = ["model.h"],
     deps = [
+        "//qrisp:plif",
         "//qrisp:rna-structure",
         "//qrisp:utils",
         "//qrisp/proto:parameters_proto",
@@ -112,9 +113,20 @@ cc_library(
 cc_binary(
     name = "qrisp",
     srcs = ["qrisp.cc"],
+    linkopts = [
+        "-shared",
+        "-lm",
+        "-lglog",
+        "-lgflags",
+    ],
     deps = [
+        ":cluster",
         ":dataset-utils",
+        ":learning-utils",
+        ":model",
+        ":performance",
         ":recurrences",
+        ":sgd",
         ":utils",
     ],
 )
