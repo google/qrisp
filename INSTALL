@@ -19,7 +19,7 @@ libraries:
 * libgflags-dev
 * libgoogle-glog-dev
 * libprotobuf-dev protobuf-c-compiler          
-* libgtest
+* (optional: libgtest for unit tests)
 
 Under Debian / Unbuntu and related distributions, the following command should
 be sufficient to install these libraries:
