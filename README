@@ -10,5 +10,4 @@ techniques such as SHAPE and similar methods. The only assumption about the
 additional signal is that it is correlated with the positions of base pairs of
 the molecule.
 
-See INSTALL for (generic) installation instructions for C++: basically
-  bazel build qrisp:qrisp
+See INSTALL for (generic) installation instructions.

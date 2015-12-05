@@ -1,0 +1,26 @@
+Installation notes for QRisp
+----------------------------
+
+QRisp is a program written in C++ (using C++11 features) using Google's protocol
+buffer library for data structures.
+It does not come with the Makefile. The build system is based on Bazel (Google's
+build system).
+
+Make sure you have bazel and and some extra libraries installed (see below)
+before you issue the build command:
+
+$ bazel build qrisp:qrisp
+
+Library dependencies
+--------------------
+Apart from C++ "standard" libraries (STL etc.) QRisp depends on the following
+libraries:
+
+* libgflags-dev
+* libgoogle-glog-dev
+* libprotobuf-dev protobuf-c-compiler          
+
+Under Debian / Unbuntu and related distributions, the following command should
+be sufficient to install these libraries:
+
+$ sudo aptitude install libprotobuf-dev protobuf-c-compiler libgflags-dev libgoogle-glog-dev
