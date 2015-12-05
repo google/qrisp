@@ -33,18 +33,12 @@ message RNASStructure {
   optional string sequence = 6;
 }
 
-message Description {
-  optional bool valid = 1;
-}
-
 message RNASStructures {
-  //
-  message Instance {
-    //
-    required RNASStructure structure = 1;
-    //
-    required Description description = 2;
+  // An Item is a single RNASStructure together with an identifier.
+  message Item {
+    required string id = 1;
+
+    required RNASStructure structure = 2;
   }
-  //
-  repeated Instance instance = 3;
+  repeated Item item = 3;
 }

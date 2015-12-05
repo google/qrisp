@@ -69,22 +69,20 @@ void LoadSplit(const string& path, vector<string>* split) {
 }
 
 void LoadDataset(const string& source, Dataset* data) {
-  // map<string, RNASStructure> protomap;
-  // SSTable_Utils::ReadUniqueProtoMapFromSSTableOrDie(source, &protomap);
-  // for (const auto& elem : protomap) {
-  //  data->insert(make_pair(elem.first, Structure(elem.second)));
-  //}
+  RNASStructures structures;
+  LoadProtoFromFile(source, &structures);
+  for (const auto& entry : structures.item()) {
+    data->insert(make_pair(elem.first, Structure(elem.second)));
+  }
 }
 
 void SaveDataset(const string& destination, const Dataset& data) {
-  // map<string, RNASStructure> protomap;
-  // for (const auto& elem : data) {
-  //  RNASStructure structure;
-  //  elem.second.ConvertToProto(&structure);
-  //  protomap.insert(make_pair(elem.first, structure));
-  //}
-  // SSTable_Utils::WriteProtoMapToSSTableOrDie(protomap, destination,
-  //                                           SSTableBuilderOptions());
+  RNASStructures structures;
+  for (const auto& elem : data) {
+    const auto item = structures.add_item();
+    item->set_id(elem.first);
+    elem.second.ConvertToProto(&item->mutable_structure());
+  }
 }
 
 std::tuple<double, double> SSMeasure(const Structure& ref,
