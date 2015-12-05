@@ -71,8 +71,8 @@ void LoadSplit(const string& path, vector<string>* split) {
 void LoadDataset(const string& source, Dataset* data) {
   RNASStructures structures;
   LoadProtoFromFile(source, &structures);
-  for (const auto& entry : structures.item()) {
-    data->insert(make_pair(elem.first, Structure(elem.second)));
+  for (const auto& elem : structures.item()) {
+    data->insert(make_pair(elem.id(), Structure(elem.structure())));
   }
 }
 
@@ -81,7 +81,7 @@ void SaveDataset(const string& destination, const Dataset& data) {
   for (const auto& elem : data) {
     const auto item = structures.add_item();
     item->set_id(elem.first);
-    elem.second.ConvertToProto(&item->mutable_structure());
+    elem.second.ConvertToProto(item->mutable_structure());
   }
 }
 
