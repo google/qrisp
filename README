@@ -11,4 +11,4 @@ additional signal is that it is correlated with the positions of base pairs of
 the molecule.
 
 See INSTALL for (generic) installation instructions for C++: basically
-  ./configure && make && make install
+  bazel build qrisp:qrisp
