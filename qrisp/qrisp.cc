@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
   google::InitGoogleLogging(argv[0]);
 
   if (FLAGS_settings.empty()) {
-    LOG(ERROR) << "Found emty path for settings.";
+    LOG(ERROR) << "Found empty path for settings.";
     return EXIT_FAILURE;
   }
 
