@@ -13,11 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <gflags/gflags.h>
 #include <algorithm>
 #include <cmath>
-#include <string>
 #include <sstream>
-#include <gflags/gflags.h>
+#include <string>
 
 #include "dataset-utils.h"
 #include "model.h"
