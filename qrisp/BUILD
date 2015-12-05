@@ -1,6 +1,5 @@
-#
-#
-#
+# The main bazel configuration file for QRisp. This BUILD file defines all
+# library, binary and test creation rules.
 
 cc_library(
     name = "dataset-utils",
@@ -141,6 +140,24 @@ cc_binary(
     deps = [
         "//qrisp:dataset-utils",
         "//qrisp:qrisp-lib",
+        "//qrisp:utils",
+    ],
+)
+
+#
+# Various unit tests for the above defined libraries.
+#
+
+cc_test(
+    name = "plif_test",
+    size = "small",
+    srcs = ["plif_test.cc"],
+    linkopts = [
+        "-lgtest",
+        "-lgtest_main",
+    ],
+    deps = [
+        "//qrisp:plif",
         "//qrisp:utils",
     ],
 )
