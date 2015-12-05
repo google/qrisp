@@ -21,10 +21,6 @@ namespace qrisp {
 
 using namespace std;
 
-// void LoadModelFromFile(const string& source, QRSPModel* model) {
-
-// void SaveModelToFile(const string& destination, const QRSPModel& model) {
-
 void InitializeFeatureVecFromModel(const QRSPModel& model, FeatureVec* fv) {
   for (const auto& feature : model.feature()) {
     auto insert_ret = fv->insert(make_pair(feature.id(), feature.value()));
@@ -42,11 +38,6 @@ void InitializeModelFromFeatureVec(const FeatureVec& fv, QRSPModel* model) {
   }
 }
 
-bool CompareKey(const pair<string, Structure>& s,
-                const pair<string, Structure>& t) {
-  return (s.first.compare(t.first) < 0);
-}
-
 void SubselectData(const vector<string>& split, const Dataset& input,
                    Dataset* output) {
   for (const auto& id : split) {
@@ -62,7 +53,6 @@ bool IsComment(const string& line) {
 }
 
 void LoadSplit(const string& path, vector<string>* split) {
-  // CHECK_OK(file::GetContents(source, &content, file::Defaults()));
   std::fstream fs;
   fs.open(path.c_str(), std::fstream::in);
   if (!fs.is_open()) {

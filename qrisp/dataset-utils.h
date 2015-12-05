@@ -23,9 +23,9 @@
 #include "utils.h"
 
 #include <algorithm>
+#include <fstream>
 #include <string>
 #include <utility>
-#include <fstream>
 #include <vector>
 
 namespace qrisp {
@@ -39,7 +39,6 @@ void LoadProtoFromFile(const string& source, T* proto) {
   }
   proto->ParseFromIstream(&input_stream);
   input_stream.close();
-  //   << "Failed to parse proto buffer file content!";
 }
 
 template <typename T>
@@ -53,35 +52,21 @@ void SaveProtoToFile(const string& destination, const T& proto) {
   output_stream.close();
 }
 
-// void LoadModelFromFile(const string& source, QRSPModel* model);
-// void SaveModelToFile(const string& destination, const QRSPModel& model);
+void LoadSplit(const string& source, vector<string>* split);
+
+void LoadDataset(const string& source, Dataset* data);
 
 void InitializeFeatureVecFromModel(const QRSPModel& model, FeatureVec* fv);
 
 void InitializeModelFromFeatureVec(const FeatureVec& fv, QRSPModel* model);
 
-class Incrementer {
- public:
-  Incrementer() { value_ = 0; }
-  int operator()() { return value_++; }
-
- private:
-  int value_;
-};
-
 void SubselectData(const vector<string>& split, const Dataset& input,
                    Dataset* output);
-
-void LoadSplit(const string& source, vector<string>* split);
-
-void LoadDataset(const string& source, Dataset* data);
 
 void SaveDataset(const string& destination, const Dataset& data);
 
 std::tuple<double, double> SSMeasure(const Structure& ref,
                                      const Structure& pred);
-
-string FindMostRecentModel(const string& pattern);
 
 }  // namespace qrisp
 

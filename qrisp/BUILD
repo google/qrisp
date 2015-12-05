@@ -86,6 +86,25 @@ cc_library(
     hdrs = ["cluster.h"],
 )
 
+cc_library(
+    name = "qrisp-lib",
+    srcs = ["qrisp-lib.cc"],
+    hdrs = ["qrisp-lib.h"],
+    deps = [
+        "//qrisp:cluster",
+        "//qrisp:dataset-utils",
+        "//qrisp:learning-utils",
+        "//qrisp:model",
+        "//qrisp:performance",
+        "//qrisp:recurrences",
+        "//qrisp:rna-structure",
+        "//qrisp:sgd",
+        "//qrisp:utils",
+        "//qrisp/proto:parameters_proto",
+        "//qrisp/proto:structure_proto",
+    ],
+)
+
 # Machine learning related libaries.
 
 cc_library(
@@ -120,13 +139,8 @@ cc_binary(
         "-lgflags",
     ],
     deps = [
-        ":cluster",
-        ":dataset-utils",
-        ":learning-utils",
-        ":model",
-        ":performance",
-        ":recurrences",
-        ":sgd",
-        ":utils",
+        "//qrisp:dataset-utils",
+        "//qrisp:qrisp-lib",
+        "//qrisp:utils",
     ],
 )

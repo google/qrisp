@@ -17,8 +17,8 @@ message PerformanceProto {
 }
 
 // Next id: 18
-message TrainingConfiguration {
-  //
+message Configuration {
+  // Enable the use of quality features during dynamic programming execution.
   optional bool enable_quality_features = 1;
 
   //
@@ -40,7 +40,7 @@ message TrainingConfiguration {
   optional string config_fn = 7;
 
   // The location of the sstable that contains the training data.
-  optional string input_sstable = 8;
+  optional string input_data = 8;
 
   // The file name the model will be stored under (as a ProtoBuffer).
   optional string model_fn = 9;
@@ -68,8 +68,15 @@ message TrainingConfiguration {
   //
   repeated PerformanceData holdout_performance = 16;
 
-  //
+  // List of values for nbest-centroid " "calculation. Example: If the list is
+  // '1,3,7' the centroids from the 1, 3 and 7 highest-scoring structures are
+  // used as the predicted structures. So basically we report performance @1,
+  // @3 and @7.
   repeated int32 nbest_values = 17;
+
+  optional bool resume_training = 18;
+
+  optional string resume_model_fn = 19;
 }
 
 // This protocol buffer stores a model of the QRSP project. It contains features
