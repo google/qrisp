@@ -1,0 +1,18 @@
+instance {
+  structure {
+    brackets: "((...))"
+    sequence: "AAAAAAA"
+  }
+  description {
+    valid: true
+  }
+}
+instance {
+  structure {
+    brackets: "((...))"
+    sequence: "AAAAAAA"
+  }
+  description {
+    valid: true
+  }
+}
