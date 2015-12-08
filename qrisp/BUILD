@@ -162,3 +162,16 @@ cc_test(
         "//third_party/googletest",
     ],
 )
+
+cc_test(
+    name = "recurrences_test",
+    srcs = ["recurrences_test.cc"],
+    linkopts = [
+        "-lpthread",
+    ],
+    deps = [
+        "//qrisp:learning-utils",
+        "//qrisp:recurrences",
+        "//third_party/googletest",
+    ],
+)

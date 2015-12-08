@@ -14,12 +14,13 @@
 // limitations under the License.
 
 #include "plif.h"
-#include "utils.h"
-
 #include <gtest/gtest.h>
+#include "utils.h"
 
 namespace qrisp {
 namespace {
+
+constexpr const float kEpsilon = 1e-6;
 
 class PlifTest : public testing::Test {
  protected:
@@ -33,15 +34,15 @@ class PlifTest : public testing::Test {
 TEST_F(PlifTest, AuxiliaryFunctions) {
   ScoreVec limits;
   linspace(0.0, 10.0, 4, &limits);
-  EXPECT_NEAR(0.0, limits[0], epsilon);
-  EXPECT_NEAR(3.333333, limits[1], epsilon);
-  EXPECT_NEAR(6.666666, limits[2], epsilon);
-  EXPECT_NEAR(10.0, limits[3], epsilon);
+  EXPECT_NEAR(0.0, limits[0], kEpsilon);
+  EXPECT_NEAR(3.333333, limits[1], kEpsilon);
+  EXPECT_NEAR(6.666666, limits[2], kEpsilon);
+  EXPECT_NEAR(10.0, limits[3], kEpsilon);
 
   linspace(-1.0, 1.0, 3, &limits);
-  EXPECT_NEAR(-1.0, limits[0], epsilon);
-  EXPECT_NEAR(0.0, limits[1], epsilon);
-  EXPECT_NEAR(1.0, limits[2], epsilon);
+  EXPECT_NEAR(-1.0, limits[0], kEpsilon);
+  EXPECT_NEAR(0.0, limits[1], kEpsilon);
+  EXPECT_NEAR(1.0, limits[2], kEpsilon);
 
   // TODO(fabio): Add test for logspace as well.
 }
