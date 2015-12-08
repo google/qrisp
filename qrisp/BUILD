@@ -152,12 +152,9 @@ cc_test(
     name = "plif_test",
     size = "small",
     srcs = ["plif_test.cc"],
-    linkopts = [
-        "-lgtest",
-        "-lgtest_main",
-    ],
     deps = [
         "//qrisp:plif",
         "//qrisp:utils",
+        "//third_party/googletest",
     ],
 )
