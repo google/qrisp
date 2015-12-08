@@ -52,6 +52,9 @@ cc_library(
     name = "utils",
     srcs = ["utils.cc"],
     hdrs = ["utils.h"],
+    deps = [
+        "//third_party/googlelog:glog",
+    ],
 )
 
 cc_library(
@@ -134,13 +137,13 @@ cc_binary(
     linkopts = [
         "-shared",
         "-lm",
-        "-lglog",
-        "-lgflags",
     ],
     deps = [
         "//qrisp:dataset-utils",
         "//qrisp:qrisp-lib",
         "//qrisp:utils",
+        "//third_party/googleflags",
+        "//third_party/googlelog:glog",
     ],
 )
 
@@ -148,13 +151,29 @@ cc_binary(
 # Various unit tests for the above defined libraries.
 #
 
-cc_test(
-    name = "plif_test",
-    size = "small",
+cc_library(
+    name = "plif_testlib",
+    testonly = 1,
     srcs = ["plif_test.cc"],
+    linkopts = [
+        "-lpthread",
+    ],
     deps = [
         "//qrisp:plif",
         "//qrisp:utils",
         "//third_party/googletest",
     ],
 )
+
+cc_test(
+    name = "plif_test",
+    deps = [":plif_testlib"],
+)
+#    size = "small",
+#    srcs = ["plif_test.cc"],
+#    deps = [
+#        "//qrisp:plif",
+#        "//qrisp:utils",
+#        "//third_party/googletest",
+#    ],
+#)
