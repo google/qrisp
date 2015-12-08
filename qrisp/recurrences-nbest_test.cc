@@ -1,3 +1,18 @@
+// Copyright 2014 Google Inc.All Rights Reserved.
+//
+//     Licensed under the Apache License,
+//     Version 2.0(the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include "experimental/users/fdb/qrsp/proto/parameters.pb.h"
 #include "experimental/users/fdb/qrsp/recurrences-nbest.h"
 #include "experimental/users/fdb/qrsp/recurrences.h"
@@ -86,25 +101,25 @@ TEST_F(RecurrencesNbestTest, CellInserter) {
   expected_tbl(kp, ip, jp).push_back(c8);
 
   {
-  nbest::NBestCells& cells = tbl(k, i, j);
-  std::sort(cells.begin(), cells.end(), nbest::CellCompWithScoreReversed);
-  nbest::NBestCells& ecells = expected_tbl(k, i, j);
-  std::sort(ecells.begin(), ecells.end(), nbest::CellCompWithScoreReversed);
-  EXPECT_EQ(cells.size(), ecells.size());
-  EXPECT_TRUE(nbest::Equiv(expected_tbl(k, i, j), tbl(k, i, j)));
-  //for_each(cells.begin(), cells.end(), nbest::ObjectDeleter());
-  //for_each(ecells.begin(), ecells.end(), nbest::ObjectDeleter());
+    nbest::NBestCells& cells = tbl(k, i, j);
+    std::sort(cells.begin(), cells.end(), nbest::CellCompWithScoreReversed);
+    nbest::NBestCells& ecells = expected_tbl(k, i, j);
+    std::sort(ecells.begin(), ecells.end(), nbest::CellCompWithScoreReversed);
+    EXPECT_EQ(cells.size(), ecells.size());
+    EXPECT_TRUE(nbest::Equiv(expected_tbl(k, i, j), tbl(k, i, j)));
+    // for_each(cells.begin(), cells.end(), nbest::ObjectDeleter());
+    // for_each(ecells.begin(), ecells.end(), nbest::ObjectDeleter());
   }
 
   {
-  nbest::NBestCells& cells = tbl(kp, ip, jp);
-  std::sort(cells.begin(), cells.end(), nbest::CellCompWithScoreReversed);
-  nbest::NBestCells& ecells = expected_tbl(kp, ip, jp);
-  std::sort(ecells.begin(), ecells.end(), nbest::CellCompWithScoreReversed);
-  EXPECT_EQ(cells.size(), ecells.size());
-  EXPECT_TRUE(nbest::Equiv(expected_tbl(kp, ip, jp), tbl(kp, ip, jp)));
-  //for_each(cells.begin(), cells.end(), nbest::ObjectDeleter());
-  //for_each(ecells.begin(), ecells.end(), nbest::ObjectDeleter());
+    nbest::NBestCells& cells = tbl(kp, ip, jp);
+    std::sort(cells.begin(), cells.end(), nbest::CellCompWithScoreReversed);
+    nbest::NBestCells& ecells = expected_tbl(kp, ip, jp);
+    std::sort(ecells.begin(), ecells.end(), nbest::CellCompWithScoreReversed);
+    EXPECT_EQ(cells.size(), ecells.size());
+    EXPECT_TRUE(nbest::Equiv(expected_tbl(kp, ip, jp), tbl(kp, ip, jp)));
+    // for_each(cells.begin(), cells.end(), nbest::ObjectDeleter());
+    // for_each(ecells.begin(), ecells.end(), nbest::ObjectDeleter());
   }
 }
 
@@ -117,8 +132,8 @@ TEST_F(RecurrencesNbestTest, CellInserterBifurcation) {
   std::tie(kp, ip, jp) = std::make_tuple(9, 22, 33);
   int kpp, ipp, jpp;
   std::tie(kpp, ipp, jpp) = std::make_tuple(4, 10, 5);
-  const vector<double> v = { 0.131, 0.177, 0.213, 0.311, 0.411, 0.194, 0.712,
-                             0.121 };
+  const vector<double> v = {0.131, 0.177, 0.213, 0.311,
+                            0.411, 0.194, 0.712, 0.121};
 
   nbest::DPTable tbl(NUM_STATES, rna_size, rna_size);
   auto* c1 = new Cell(k, i, j, v[0], nullptr);
@@ -139,69 +154,67 @@ TEST_F(RecurrencesNbestTest, CellInserterBifurcation) {
   tbl(kp, ip, jp).push_back(c8);
   // Insert new Cells
   const double s = 0.913;
-  nbest::CreateCellsFromTwoCoordinates(&tbl,
-                                       kpp, ipp, jpp,
-                                       k, i, j,
-                                       kp, ip, jp, s);
+  nbest::CreateCellsFromTwoCoordinates(&tbl, kpp, ipp, jpp, k, i, j, kp, ip, jp,
+                                       s);
 
   nbest::DPTable exptbl(NUM_STATES, rna_size, rna_size);
   {
-  nbest::NBestCells& t = exptbl(k, i, j);
-  t.push_back(new Cell(k, i, j, v[0], nullptr));
-  t.push_back(new Cell(k, i, j, v[1], nullptr));
-  t.push_back(new Cell(k, i, j, v[2], nullptr));
-  t.push_back(new Cell(k, i, j, v[3], nullptr));
+    nbest::NBestCells& t = exptbl(k, i, j);
+    t.push_back(new Cell(k, i, j, v[0], nullptr));
+    t.push_back(new Cell(k, i, j, v[1], nullptr));
+    t.push_back(new Cell(k, i, j, v[2], nullptr));
+    t.push_back(new Cell(k, i, j, v[3], nullptr));
   }
   {
-  nbest::NBestCells& t = exptbl(kp, ip, jp);
-  t.push_back(new Cell(kp, ip, jp, v[4], nullptr));
-  t.push_back(new Cell(kp, ip, jp, v[5], nullptr));
-  t.push_back(new Cell(kp, ip, jp, v[6], nullptr));
-  t.push_back(new Cell(kp, ip, jp, v[7], nullptr));
+    nbest::NBestCells& t = exptbl(kp, ip, jp);
+    t.push_back(new Cell(kp, ip, jp, v[4], nullptr));
+    t.push_back(new Cell(kp, ip, jp, v[5], nullptr));
+    t.push_back(new Cell(kp, ip, jp, v[6], nullptr));
+    t.push_back(new Cell(kp, ip, jp, v[7], nullptr));
   }
   {
-  nbest::NBestCells& t = exptbl(kpp, ipp, jpp);
-  t.push_back(new Cell(kpp, ipp, jpp, v[0] + v[4] + s, c1, c5));
-  t.push_back(new Cell(kpp, ipp, jpp, v[0] + v[5] + s, c1, c6));
-  t.push_back(new Cell(kpp, ipp, jpp, v[0] + v[6] + s, c1, c7));
-  t.push_back(new Cell(kpp, ipp, jpp, v[0] + v[7] + s, c1, c8));
-  t.push_back(new Cell(kpp, ipp, jpp, v[1] + v[4] + s, c2, c5));
-  t.push_back(new Cell(kpp, ipp, jpp, v[1] + v[5] + s, c2, c6));
-  t.push_back(new Cell(kpp, ipp, jpp, v[1] + v[6] + s, c2, c7));
-  t.push_back(new Cell(kpp, ipp, jpp, v[1] + v[7] + s, c2, c8));
-  t.push_back(new Cell(kpp, ipp, jpp, v[2] + v[4] + s, c3, c5));
-  t.push_back(new Cell(kpp, ipp, jpp, v[2] + v[5] + s, c3, c6));
-  t.push_back(new Cell(kpp, ipp, jpp, v[2] + v[6] + s, c3, c7));
-  t.push_back(new Cell(kpp, ipp, jpp, v[2] + v[7] + s, c3, c8));
-  t.push_back(new Cell(kpp, ipp, jpp, v[3] + v[4] + s, c4, c5));
-  t.push_back(new Cell(kpp, ipp, jpp, v[3] + v[5] + s, c4, c6));
-  t.push_back(new Cell(kpp, ipp, jpp, v[3] + v[6] + s, c4, c7));
-  t.push_back(new Cell(kpp, ipp, jpp, v[3] + v[7] + s, c4, c8));
+    nbest::NBestCells& t = exptbl(kpp, ipp, jpp);
+    t.push_back(new Cell(kpp, ipp, jpp, v[0] + v[4] + s, c1, c5));
+    t.push_back(new Cell(kpp, ipp, jpp, v[0] + v[5] + s, c1, c6));
+    t.push_back(new Cell(kpp, ipp, jpp, v[0] + v[6] + s, c1, c7));
+    t.push_back(new Cell(kpp, ipp, jpp, v[0] + v[7] + s, c1, c8));
+    t.push_back(new Cell(kpp, ipp, jpp, v[1] + v[4] + s, c2, c5));
+    t.push_back(new Cell(kpp, ipp, jpp, v[1] + v[5] + s, c2, c6));
+    t.push_back(new Cell(kpp, ipp, jpp, v[1] + v[6] + s, c2, c7));
+    t.push_back(new Cell(kpp, ipp, jpp, v[1] + v[7] + s, c2, c8));
+    t.push_back(new Cell(kpp, ipp, jpp, v[2] + v[4] + s, c3, c5));
+    t.push_back(new Cell(kpp, ipp, jpp, v[2] + v[5] + s, c3, c6));
+    t.push_back(new Cell(kpp, ipp, jpp, v[2] + v[6] + s, c3, c7));
+    t.push_back(new Cell(kpp, ipp, jpp, v[2] + v[7] + s, c3, c8));
+    t.push_back(new Cell(kpp, ipp, jpp, v[3] + v[4] + s, c4, c5));
+    t.push_back(new Cell(kpp, ipp, jpp, v[3] + v[5] + s, c4, c6));
+    t.push_back(new Cell(kpp, ipp, jpp, v[3] + v[6] + s, c4, c7));
+    t.push_back(new Cell(kpp, ipp, jpp, v[3] + v[7] + s, c4, c8));
   }
 
   {
-  nbest::NBestCells& cells = tbl(k, i, j);
-  std::sort(cells.begin(), cells.end(), nbest::CellCompWithScoreReversed);
-  nbest::NBestCells& ecells = exptbl(k, i, j);
-  std::sort(ecells.begin(), ecells.end(), nbest::CellCompWithScoreReversed);
-  EXPECT_EQ(cells.size(), ecells.size());
-  EXPECT_TRUE(nbest::Equiv(ecells, cells));
+    nbest::NBestCells& cells = tbl(k, i, j);
+    std::sort(cells.begin(), cells.end(), nbest::CellCompWithScoreReversed);
+    nbest::NBestCells& ecells = exptbl(k, i, j);
+    std::sort(ecells.begin(), ecells.end(), nbest::CellCompWithScoreReversed);
+    EXPECT_EQ(cells.size(), ecells.size());
+    EXPECT_TRUE(nbest::Equiv(ecells, cells));
   }
   {
-  nbest::NBestCells& cells = tbl(kp, ip, jp);
-  std::sort(cells.begin(), cells.end(), nbest::CellCompWithScoreReversed);
-  nbest::NBestCells& ecells = exptbl(kp, ip, jp);
-  std::sort(ecells.begin(), ecells.end(), nbest::CellCompWithScoreReversed);
-  EXPECT_EQ(cells.size(), ecells.size());
-  EXPECT_TRUE(nbest::Equiv(ecells, cells));
+    nbest::NBestCells& cells = tbl(kp, ip, jp);
+    std::sort(cells.begin(), cells.end(), nbest::CellCompWithScoreReversed);
+    nbest::NBestCells& ecells = exptbl(kp, ip, jp);
+    std::sort(ecells.begin(), ecells.end(), nbest::CellCompWithScoreReversed);
+    EXPECT_EQ(cells.size(), ecells.size());
+    EXPECT_TRUE(nbest::Equiv(ecells, cells));
   }
   {
-  nbest::NBestCells& cells = tbl(kpp, ipp, jpp);
-  std::sort(cells.begin(), cells.end(), nbest::CellCompWithScoreReversed);
-  nbest::NBestCells& ecells = exptbl(kpp, ipp, jpp);
-  std::sort(ecells.begin(), ecells.end(), nbest::CellCompWithScoreReversed);
-  EXPECT_EQ(cells.size(), ecells.size());
-  EXPECT_TRUE(nbest::Equiv(ecells, cells));
+    nbest::NBestCells& cells = tbl(kpp, ipp, jpp);
+    std::sort(cells.begin(), cells.end(), nbest::CellCompWithScoreReversed);
+    nbest::NBestCells& ecells = exptbl(kpp, ipp, jpp);
+    std::sort(ecells.begin(), ecells.end(), nbest::CellCompWithScoreReversed);
+    EXPECT_EQ(cells.size(), ecells.size());
+    EXPECT_TRUE(nbest::Equiv(ecells, cells));
   }
 }
 
@@ -214,7 +227,6 @@ TEST_F(RecurrencesNbestTest, FillNBestTable) {
   std::default_random_engine gen(s);
   for (int i = 0; i < Features_RNAFeatures_FV_SIZE; i++) {
     model.insert(make_pair(i, gen()));
-
   }
   InitializeFeatures(&model);
   // Create and fill dynamic programming tables.
@@ -230,7 +242,6 @@ TEST_F(RecurrencesNbestTest, DecodeNBest) {
   std::default_random_engine gen(s);
   for (int i = 0; i < Features_RNAFeatures_FV_SIZE; i++) {
     model.insert(make_pair(i, static_cast<double>(gen()) / gen.max()));
-
   }
   InitializeFeatures(&model);
   const DECODING_MODE vmode = LOSS_DISABLED;
@@ -277,7 +288,6 @@ TEST_F(RecurrencesNbestTest, DecodeNBestLossEnabled) {
   std::default_random_engine gen(s);
   for (int i = 0; i < Features_RNAFeatures_FV_SIZE; i++) {
     model.insert(make_pair(i, static_cast<double>(gen()) / gen.max()));
-
   }
   InitializeFeatures(&model);
   const DECODING_MODE vmode = LOSS_ENABLED;
