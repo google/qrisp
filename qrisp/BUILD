@@ -151,9 +151,8 @@ cc_binary(
 # Various unit tests for the above defined libraries.
 #
 
-cc_library(
-    name = "plif_testlib",
-    testonly = 1,
+cc_test(
+    name = "plif_test",
     srcs = ["plif_test.cc"],
     linkopts = [
         "-lpthread",
@@ -164,16 +163,3 @@ cc_library(
         "//third_party/googletest",
     ],
 )
-
-cc_test(
-    name = "plif_test",
-    deps = [":plif_testlib"],
-)
-#    size = "small",
-#    srcs = ["plif_test.cc"],
-#    deps = [
-#        "//qrisp:plif",
-#        "//qrisp:utils",
-#        "//third_party/googletest",
-#    ],
-#)
