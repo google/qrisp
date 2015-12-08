@@ -50,7 +50,7 @@ cc_library(
 
 cc_library(
     name = "utils",
-    srcs = ["utils.cc"],
+    srcs = ["utils.h"],
     hdrs = ["utils.h"],
     deps = [
         "//third_party/googlelog:glog",
@@ -135,14 +135,13 @@ cc_binary(
     name = "qrisp",
     srcs = ["qrisp.cc"],
     linkopts = [
-        "-shared",
         "-lm",
     ],
     deps = [
         "//qrisp:dataset-utils",
         "//qrisp:qrisp-lib",
         "//qrisp:utils",
-        "//third_party/googleflags",
+        "//third_party/googleflags:gflags",
         "//third_party/googlelog:glog",
     ],
 )

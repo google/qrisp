@@ -16,14 +16,14 @@
 #ifndef QRISP_UTILS_H__
 #define QRISP_UTILS_H__
 
+#include <glog/logging.h>
+#include <cfloat>
+#include <cstdint>
 #include <map>
 #include <string>
 #include <tuple>
 #include <unordered_map>
 #include <vector>
-#include <cstdint>
-#include <cfloat>
-#include <glog/logging.h>
 
 namespace qrisp {
 
@@ -56,12 +56,9 @@ typedef vector<score_t> ScoreVec;
 // const ScoreVec limits = { 0.0, 0.25, 0.5, 0.75, 1.1 };
 const ScoreVec limits = {0.0, 0.25, 0.5, 1.5, 3.0};
 
-static float epsilon = 1e-6;
-
-// Define mapping from characters to ints and reverse mapping.
+// Define mapping from characters to indices.
 static int char2int[21] = {0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0, 3, 3};
-static char int2char[4] = {'A', 'C', 'G', 'U'};
 
 constexpr int b0 = 1;
 constexpr int b1 = 4;

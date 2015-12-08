@@ -13,14 +13,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <functional>
+#include <set>
+
 #include "model.h"
 #include "plif.h"
 #include "qrisp/proto/parameters.pb.h"
+#include "third_party/googleflags/include/gflags/gflags.h"
 #include "utils.h"
-
-#include <functional>
-#include <set>
-#include <gflags/gflags.h>
 
 //#define _SHOW_STATES_
 #ifdef _SHOW_STATES_
@@ -29,7 +29,7 @@
 #define message(fmt, ...)
 #endif
 
-DEFINE_bool(enable_quality_features, false, "");
+DECLARE_bool(enable_quality_features);
 
 namespace qrisp {
 

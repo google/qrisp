@@ -150,12 +150,12 @@ Structure& Structure::operator=(const Structure& s) {
 // This function checks whether we have any pseudo-knots.
 bool Structure::ContainsPseudoKnot() const {
   vector<std::tuple<idx_t, idx_t>> all_pairs;
-  for (int i = 1; i < this->GetSize(); i++) {
+  for (size_t i = 1; i < this->GetSize(); i++) {
     if (pairings_[i] != 0 && i < pairings_[i]) {
       all_pairs.push_back(std::make_tuple(i, pairings_[i]));
     }
   }
-  for (int k = 1; k < all_pairs.size(); k++) {
+  for (size_t k = 1; k < all_pairs.size(); k++) {
     idx_t i, j, ip, jp;
     std::tie(i, j) = all_pairs[k - 1];
     std::tie(ip, jp) = all_pairs[k];

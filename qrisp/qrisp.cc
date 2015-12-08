@@ -13,7 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <gflags/gflags.h>
 #include <algorithm>
 #include <cmath>
 #include <sstream>
@@ -28,7 +27,10 @@
 #include "recurrences.h"
 #include "rna-structure.h"
 #include "sgd.h"
+#include "third_party/googleflags/include/gflags/gflags.h"
 #include "utils.h"
+
+DEFINE_bool(enable_quality_features, true, "");
 
 DEFINE_bool(resume_training, true, "Uses stored training model, if present.");
 DEFINE_string(resume_model_fn, "", "Location of the split file.");
