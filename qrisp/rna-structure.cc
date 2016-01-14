@@ -66,17 +66,6 @@ Structure::Structure(const vector<idx_t>& pairings, const string& seq,
   }
 }
 
-Structure::Structure(const RNASStructure& rna) {
-  size_ = rna.base_size();
-  has_quality_ = false;
-  sequence_.assign(rna.base().begin(), rna.base().end());
-  pairings_.assign(rna.pair().begin(), rna.pair().end());
-  quality_.assign(rna.confidence().begin(), rna.confidence().end());
-  if (rna.confidence_size() == pairings_.size()) {
-    has_quality_ = true;
-  }
-}
-
 Structure::Structure(const Structure& rna) {
   size_ = rna.GetSize();
   has_quality_ = rna.has_quality_;
@@ -86,7 +75,41 @@ Structure::Structure(const Structure& rna) {
   quality_.assign(rna.quality_.cbegin(), rna.quality_.cend());
 }
 
-void Structure::ConvertToProto(RNASStructure* rna) const {
+
+bool Structure::InitializeFromProto(const RNASStructure& rna) {
+  size_ = rna.base_size();
+  has_quality_ = false;
+  if (rna.base_size() > 0) {
+    sequence_.assign(rna.base().begin(), rna.base().end());
+  } else if (!rna.sequence().empty()) {
+    const auto seq = rna.sequence();
+    sequence_.assign(seq.size(), IDX_NOT_SET);
+    for (int i = 0; i < seq.size(); i++) {
+      idx_t base = seq[i] - 65;
+      if (base > 20) {
+        return false;
+      }
+      sequence_[i + 1] = char2int[base];
+    }
+  } else {
+    return false;
+  }
+  if (rna.pair_size() > 0) {
+    pairings_.assign(rna.pair().begin(), rna.pair().end());
+  } else if (!rna.brackets().empty()) {
+    pairings_.assign(rna.brackets().size(), IDX_NOT_SET);
+    BracketsToPairings(rna.brackets(), &pairings_);
+  } else {
+    return false;
+  }
+  quality_.assign(rna.confidence().begin(), rna.confidence().end());
+  if (rna.confidence_size() == pairings_.size()) {
+    has_quality_ = true;
+  }
+  return true;
+}
+
+bool Structure::ConvertToProto(RNASStructure* rna) const {
   rna->mutable_base()->Resize(size_, -1);
   std::copy(sequence_.begin(), sequence_.end(), rna->mutable_base()->begin());
   rna->mutable_pair()->Resize(size_, -1);

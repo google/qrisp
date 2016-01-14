@@ -72,6 +72,8 @@ class Substructure {
 // The size of the structure is defined as the size of the sequence + 1.
 class Structure {
  public:
+  Structure() : size_(0), has_quality_(false) {}
+
   // This constructor expects a RNA structure in bracket notation form.
   Structure(const string& brackets, const string& seq,
             const vector<score_t>& qual);
@@ -81,14 +83,14 @@ class Structure {
   Structure(const vector<idx_t>& pairings, const string& seq,
             const vector<score_t>& qual);
 
-  // Constructor from RNASStructure protocol buffer.
-  Structure(const RNASStructure& rna);
-
   // Copy constructor for Structure objects themselves.
   Structure(const Structure& rna);
 
+  // Initialize the Structure object with information coming from the proto.
+  bool InitializeFromProto(const RNASStructure& rna);
+
   // Convert the structure back to the proto representation.
-  void ConvertToProto(RNASStructure* rna) const;
+  bool ConvertToProto(RNASStructure* rna) const;
 
   // Field / element accessing methods.
   inline idx_t GetSize() const { return size_; }

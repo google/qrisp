@@ -72,7 +72,12 @@ void LoadDataset(const string& source, Dataset* data) {
   RNASStructures structures;
   LoadProtoFromFile(source, &structures);
   for (const auto& elem : structures.item()) {
-    data->insert(make_pair(elem.id(), Structure(elem.structure())));
+    auto it = data->insert(make_pair(elem.id(), Structure()));
+    if (!it.second) {
+      LOG(ERROR) << "Element not inserted: " << elem.id();
+      continue;
+    }
+    it.first->second.InitializeFromProto(elem.structure());
   }
 }
 
