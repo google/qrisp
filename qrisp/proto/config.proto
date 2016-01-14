@@ -42,8 +42,8 @@ message Configuration {
   //
   optional bool visualize_training = 3;
 
-  // The learning rate that will be used in training.
-  optional double epsilon = 4;
+  // The precision we are using.
+  optional double epsilon = 4 [default = 1e-6];
 
   // The learning rate that will be used in training.
   optional double learning_rate = 5;
@@ -51,7 +51,7 @@ message Configuration {
   // The factor in front of the regularization part of the objective function.
   optional double regularization_coeff = 6;
 
-  // The file name th
+  // DEPRECATED The file name of the configuration.
   optional string config_fn = 7;
 
   // The location of the sstable that contains the training data.

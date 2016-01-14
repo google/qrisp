@@ -69,12 +69,13 @@ void FillTables(const Structure& input, DECODING_MODE vmode, double loss_factor,
                 const FeatureVec& params, DPTable* scores, DPTable* traceback) {
   // Initialize scoring functions.
   auto ph = std::placeholders::_1;
-  auto Hairpin = BIND_SC(&HairpinWeights) auto HelixBasePair =
-      BIND_SC(&HelixBasePairWeights) auto HelixChange =
-          BIND_SC(&HelixChangeWeights) auto HelixClosing =
-              BIND_SC(&HelixClosingWeights) auto HelixExtend = BIND_SC(
-                  &HelixExtendWeights) auto HelixStacking =
-                  BIND_SC(&HelixStackingWeights) auto MultiBase = BIND_SC(
+  auto Hairpin = BIND_SC(&HairpinWeights)
+  auto HelixBasePair = BIND_SC(&HelixBasePairWeights) 
+  auto HelixChange = BIND_SC(&HelixChangeWeights)
+  auto HelixClosing = BIND_SC(&HelixClosingWeights)
+  auto HelixExtend = BIND_SC(&HelixExtendWeights)
+  auto HelixStacking = BIND_SC(&HelixStackingWeights)
+  auto MultiBase = BIND_SC(
                       &MultiBaseWeights) auto MultiMismatch =
                       BIND_SC(&MultiMismatchWeights) auto MultiPaired = BIND_SC(
                           &MultiPairedWeights) auto MultiUnpaired =
