@@ -20,7 +20,7 @@ def proto_library(name, src, deps = None):
   outputs = header_outputs + [
     basename + "pb.cc",
   ]
-      
+
   native.genrule(
     name = cc_proto_name,
     srcs = [ src ] + proto_cc_deps,
