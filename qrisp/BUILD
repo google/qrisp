@@ -9,6 +9,7 @@ cc_library(
         "//qrisp:rna-structure",
         "//qrisp:utils",
         "//qrisp/proto:parameters_proto",
+        "//qrisp/proto:config_proto",
         "//qrisp/proto:structure_proto",
     ],
 )
@@ -43,6 +44,7 @@ cc_library(
     deps = [
         "//qrisp:plif",
         "//qrisp:rna-structure",
+        "//third_party/googleflags:gflags",
         "//qrisp:utils",
         "//qrisp/proto:parameters_proto",
     ],

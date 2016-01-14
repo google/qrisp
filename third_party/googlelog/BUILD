@@ -31,6 +31,9 @@ cc_library(
         "src/utilities.h",
         "src/vlog_is_on.cc",
     ],
+    copts = [
+      "-D_XOPEN_SOURCE"
+    ],
     hdrs = [
         "src/config.h",
         "src/glog/log_severity.h",

@@ -45,19 +45,19 @@ namespace {
 
 // TODO(fdb): Some preliminary checks. Add more and use proto inspection instead
 // of nasty "if blah return blub".
-bool CheckConfiguration(const qrisp::Configuration& config) {
-  if (!(config.learning_rate() > 0.0 && config.learning_rate() <= 100.0)) {
-    return false;
-  }
-  if (!(config.regularization_coeff() > 0.0 &&
-        config.regularization_coeff() <= 10000.0)) {
-    return false;
-  }
-  if (!(config.max_iter() >= -1 && config.max_iter() <= 1000)) {
-    return false;
-  }
-  return true;
-}
+//bool CheckConfiguration(const qrisp::Configuration& config) {
+//  if (!(config.learning_rate() > 0.0 && config.learning_rate() <= 100.0)) {
+//    return false;
+//  }
+//  if (!(config.regularization_coeff() > 0.0 &&
+//        config.regularization_coeff() <= 10000.0)) {
+//    return false;
+//  }
+//  if (!(config.max_iter() >= -1 && config.max_iter() <= 1000)) {
+//    return false;
+//  }
+//  return true;
+//}
 
 }  // namespace
 

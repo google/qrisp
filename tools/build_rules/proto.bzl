@@ -4,12 +4,12 @@ proto_filetype = FileType([".proto"])
 
 def proto_library(name, src, deps = None):
   proto_cc_deps = [
-    "//third_party/protobuf:protoc",
+    "//google/protobuf:protoc",
   ]
   cc_deps = [
-    "//third_party/protobuf:protobuf"
+    "//google/protobuf:protobuf"
   ]
-  command = "$(location //third_party/protobuf:protoc) --cpp_out=$(GENDIR)/"
+  command = "$(location //google/protobuf:protoc) --cpp_out=$(GENDIR)/"
   command += " $(location %s)" % (src)
 
   basename = src[0:-5]

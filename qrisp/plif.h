@@ -57,18 +57,6 @@ inline void linspace(const double& lower_bound, const double& upper_bound,
     (*limits)[i] = lower_bound + (i * step_size);
 }
 
-inline void logspace(const double& lower_bound, const double& upper_bound,
-                     const int& num_buckets, ScoreVec* limits) {
-  limits->resize(num_buckets, 0.0);
-  double begin = pow10(lower_bound);
-  double end = pow10(upper_bound);
-  const double step_size = (upper_bound - lower_bound) / (num_buckets - 1);
-  (*limits)[0] = begin;
-  (*limits)[num_buckets - 1] = end;
-  for (int i = 1; i < num_buckets - 1; i++)
-    (*limits)[i] = pow10(lower_bound + i * step_size);
-}
-
 // This function can be used to calculate the update values for a 1d plif
 // on-the-fly without using the Plif class above.
 void EvaluatePlifAt(const ScoreVec& limits, const double& x, const idx_t offset,
