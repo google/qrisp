@@ -20,54 +20,8 @@
 
 namespace qrisp {
 
-void Structure::AuxConstructor(const string& seq) {
-  size_ = seq.size() + 1;
-  CHECK(size_ >= MIN_RNA_SIZE);
-  CHECK(size_ < MAX_RNA_SIZE);
-  sequence_.assign(size_, IDX_NOT_SET);
-  for (int i = 0; i < seq.size(); i++) {
-    idx_t base = seq[i] - 65;
-    CHECK(base <= 20);
-    sequence_[i + 1] = char2int[base];
-  }
-  pairings_.assign(size_, IDX_NOT_SET);
-}
-
-Structure::Structure(const string& brackets, const string& seq,
-                     const vector<score_t>& qual)
-    : has_quality_(false) {
-  AuxConstructor(seq);
-  CHECK(size_ == brackets.size() + 1);
-  BracketsToPairings(brackets, &pairings_);
-  if (!qual.empty()) {
-    if (size_ != qual.size() + 1) {
-      LOG(ERROR) << "Quality vector has wrong size!";
-      exit(EXIT_FAILURE);
-    }
-    quality_.assign(qual.cbegin(), qual.cend());
-    quality_.emplace(quality_.begin(), INVALID_QUALITY);
-    has_quality_ = true;
-  }
-}
-
-Structure::Structure(const vector<idx_t>& pairings, const string& seq,
-                     const vector<score_t>& qual)
-    : has_quality_(false) {
-  AuxConstructor(seq);
-  pairings_.assign(pairings.cbegin(), pairings.cend());
-  if (!qual.empty()) {
-    if (size_ != qual.size() + 1) {
-      LOG(ERROR) << "Quality vector has wrong size!";
-      exit(EXIT_FAILURE);
-    }
-    quality_.assign(qual.cbegin(), qual.cend());
-    quality_.emplace(quality_.begin(), INVALID_QUALITY);
-    has_quality_ = true;
-  }
-}
-
 Structure::Structure(const Structure& rna) {
-  size_ = rna.GetSize();
+  size_ = rna.Size();
   has_quality_ = rna.has_quality_;
   CHECK(size_ >= MIN_RNA_SIZE);
   sequence_.assign(rna.sequence_.cbegin(), rna.sequence_.cend());
@@ -76,8 +30,8 @@ Structure::Structure(const Structure& rna) {
 }
 
 
-bool Structure::InitializeFromProto(const RNASStructure& rna) {
-  size_ = rna.base_size();
+bool Structure::InitializeFromProto(const StructureMessage& rna) {
+  size_ = rna.length() + 1;
   has_quality_ = false;
   if (rna.base_size() > 0) {
     sequence_.assign(rna.base().begin(), rna.base().end());
@@ -94,14 +48,25 @@ bool Structure::InitializeFromProto(const RNASStructure& rna) {
   } else {
     return false;
   }
+  // Initialize pairings with zero everywhere. Position zero is set to a dummy
+  // value.
+  pairings_.assign(rna.length(), 0);
+  pairings_[0] = IDX_NOT_SET;
   if (rna.pair_size() > 0) {
-    pairings_.assign(rna.pair().begin(), rna.pair().end());
+    for (const auto& pair : rna.pair()) {
+      pairings_.assign(rna.length(), 0);
+      pairings_[pair.lo()] = pair.hi();
+      pairings_[pair.hi()] = pair.lo();
+    }
   } else if (!rna.brackets().empty()) {
-    pairings_.assign(rna.brackets().size(), IDX_NOT_SET);
     BracketsToPairings(rna.brackets(), &pairings_);
   } else {
     return false;
   }
+  if (rna.confidence_size() + 1 == size_) {
+
+  }
+  pairings_.assign(rna.length(), 0);
   quality_.assign(rna.confidence().begin(), rna.confidence().end());
   if (rna.confidence_size() == pairings_.size()) {
     has_quality_ = true;
@@ -109,18 +74,85 @@ bool Structure::InitializeFromProto(const RNASStructure& rna) {
   return true;
 }
 
-bool Structure::ConvertToProto(RNASStructure* rna) const {
+bool Structure::LoadPairingsFromString(const string& input) {
+  pairings_.assign(input.size() + 1, IDX_NOT_SET);
+  BracketsToPairings(input, &pairings_);
+  return true;
+}
+
+bool Structure::LoadPairingsFromVector(const vector<idx_t>& input) {
+  pairings_.assign(input.cbegin(), input.cend());
+  return true;
+}
+
+bool Structure::LoadSequenceFromString(const string& input) {
+  size_ = input.size() + 1;
+  CHECK(size_ >= MIN_RNA_SIZE);
+  CHECK(size_ < MAX_RNA_SIZE);
+  sequence_.assign(size_, IDX_NOT_SET);
+  for (int i = 0; i < input.size(); i++) {
+    idx_t base = input[i] - 65;
+    CHECK(base <= 20);
+    sequence_[i + 1] = char2int[base];
+  }
+  return true;
+}
+
+bool Structure::LoadSequenceFromVector(const vector<idx_t>& input) {
+  sequence_.assign(input.begin(), input.end());
+  return true;
+}
+
+bool Structure::Initialize(const string& brackets, const string& seq,
+                           const vector<score_t>& qual) {
+  size_ = brackets.size() + 1;
+  LoadPairingsFromString(brackets);
+  LoadSequenceFromString(seq);
+  if (qual.size() > 0) {
+    quality_.assign(qual.cbegin(), qual.cend());
+    has_quality_ = true;
+  }
+  if (pairings_.size() == size_ && sequence_.size() == size_ &&
+      (quality_.size() == size_ || quality_.size() == 0)) {
+    return true;
+  }
+  return false;
+}
+
+//Structure::Structure(const vector<idx_t>& pairings, const string& seq,
+//                     const vector<score_t>& qual)
+//  pairings_.assign(pairings.cbegin(), pairings.cend());
+//  if (!qual.empty()) {
+//    if (size_ != qual.size() + 1) {
+//      LOG(ERROR) << "Quality vector has wrong size!";
+//      exit(EXIT_FAILURE);
+//    }
+//    quality_.assign(qual.cbegin(), qual.cend());
+//    quality_.emplace(quality_.begin(), INVALID_QUALITY);
+//    has_quality_ = true;
+//  }
+//}
+
+
+bool Structure::ConvertToProto(StructureMessage* rna) const {
+  rna->set_length(pairings_.size() - 1);
+  for (int i=1; i < pairings_.size(); i++) {
+    if (pairings_[i] != 0 && i < pairings_[i]) {
+      auto p = rna->add_pair();
+      p->set_lo(i);
+      p->set_lo(pairings_[i]);
+    }
+  }
   rna->mutable_base()->Resize(size_, -1);
   std::copy(sequence_.begin(), sequence_.end(), rna->mutable_base()->begin());
-  rna->mutable_pair()->Resize(size_, -1);
-  std::copy(pairings_.begin(), pairings_.end(), rna->mutable_pair()->begin());
   rna->mutable_confidence()->Resize(size_, -1);
   std::copy(quality_.begin(), quality_.end(),
             rna->mutable_confidence()->begin());
+  return true;
 }
 
 Tuple Structure::GetBasesAt(const Tuple& t) const {
-  // const idx_t len= this->GetSize();
+  // const idx_t len= this->Size();
   int i, j, k, l;
   std::tie(i, j, k, l) = t;
   // if (!(i > 0 && (i < len || i == IDX_NOT_SET) &&
@@ -173,7 +205,7 @@ Structure& Structure::operator=(const Structure& s) {
 // This function checks whether we have any pseudo-knots.
 bool Structure::ContainsPseudoKnot() const {
   vector<std::tuple<idx_t, idx_t>> all_pairs;
-  for (size_t i = 1; i < this->GetSize(); i++) {
+  for (size_t i = 1; i < this->Size(); i++) {
     if (pairings_[i] != 0 && i < pairings_[i]) {
       all_pairs.push_back(std::make_tuple(i, pairings_[i]));
     }
@@ -191,7 +223,7 @@ bool Structure::ContainsPseudoKnot() const {
 
 // This function performs some basic sanity checks.
 bool Structure::IsValidStructure() const {
-  const int len = this->GetSize();
+  const int len = this->Size();
   // Just following a convention.
   CHECK(this->pairings_[0] == IDX_NOT_SET);
   // At least one position has to be in the structure.
@@ -207,12 +239,13 @@ bool Structure::IsValidStructure() const {
   return true;
 }
 
+
 // This function calulates the base pairs of all 0-,1- and 2-loops of a given
 // structure.
 void Structure::CalculateSubstructure(
     vector<Substructure>* result, vector<bool>* accessible_positions) const {
   result->clear();
-  const int len = this->GetSize();
+  const int len = this->Size();
   accessible_positions->resize(len, false);
   if (!this->IsValidStructure()) {
     return;
@@ -253,9 +286,9 @@ void Structure::CalculateSubstructure(
 }
 
 double PairwiseLoss(const Structure& a, const Structure& b) {
-  CHECK(a.GetSize() == b.GetSize());
+  CHECK(a.Size() == b.Size());
   double cur_loss = 0.0;
-  for (int i = 1; i < a.GetSize(); i++) {
+  for (int i = 1; i < a.Size(); i++) {
     if (a(i) != b(i)) {
       cur_loss += 1.0;
     }
@@ -264,9 +297,9 @@ double PairwiseLoss(const Structure& a, const Structure& b) {
 }
 
 double HammingLoss(const Structure& a, const Structure& b) {
-  CHECK(a.GetSize() == b.GetSize());
+  CHECK(a.Size() == b.Size());
   double cur_loss = 0.0;
-  for (int i = 1; i < a.GetSize(); i++) {
+  for (int i = 1; i < a.Size(); i++) {
     if ((a(i) == 0 && b(i) != 0) || (a(i) != 0 && b(i) == 0)) {
       cur_loss += 1.0;
     }
@@ -303,10 +336,10 @@ void BracketsToPairings(const string& brackets, vector<idx_t>* pairings) {
 }
 
 bool operator==(const Structure& a, const Structure& b) {
-  if (a.GetSize() != b.GetSize()) {
+  if (a.Size() != b.Size()) {
     return false;
   }
-  for (int i = 1; i < a.GetSize(); i++) {
+  for (int i = 1; i < a.Size(); i++) {
     if (a(i) != b(i) || a[i] != b[i] ||
         (a.HasQuality() && b.HasQuality() && a.quality(i) != b.quality(i))) {
       return false;

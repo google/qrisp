@@ -17,28 +17,44 @@ syntax = "proto2";
 
 package qrisp;
 
-// This protocol buffer represents one RNA secondary structure.
-message RNASStructure {
+// This protocol buffer message represents one RNA secondary structure.
+message StructureMessage {
   // Encodes the structure in terms of base pairs.
-  repeated int32 pair = 1;
+  // We only store the paired positions. Each pair consists of a lo, hi pair
+  // where lo is holding the lower index of the two indices (hi the higher, duh).
+  // Example: .((....)). translates to 0980000320, so we store the pairs (2,9) and (3,8).
+  message Pair {
+    required int32 lo = 1;
+    required int32 hi = 2;
+  }
+  repeated Pair pair = 1;
+
+  // The total length of the secondary structure.
+  optional int32 length = 2;
+
   // The sequence of nucleotides.
-  repeated int32 base = 2;
+  repeated int32 base = 3;
+
   // Position-wise confidence values.
-  repeated float confidence = 3;
-  // An optional description of the structure.
-  optional string description = 4;
-  // Bracket representation of the structure
+  repeated float confidence = 4;
+
+  // Bracket representation of the structure. Example "(.(...))".
   optional string brackets = 5;
-  // Bracket representation of the structure
+
+  // Sequence information as a string. Example: "CGGAAA".
   optional string sequence = 6;
+
+  // An optional description of the structure.
+  optional string description = 7;
 }
 
-message RNASStructures {
+// A wrapper for a set of RNA secondary structures.
+message RNASStructuresSetMessage {
   // An Item is a single RNASStructure together with an identifier.
   message Item {
     required string id = 1;
 
-    required RNASStructure structure = 2;
+    required StructureMessage structure = 2;
   }
   repeated Item item = 3;
 }

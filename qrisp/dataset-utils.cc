@@ -15,11 +15,15 @@
 
 #include "dataset-utils.h"
 
-#include <string>
-
 namespace qrisp {
 
-using namespace std;
+namespace {
+
+bool IsComment(const string& line) {
+  return (line.find("#") != string::npos || line.find("//") != string::npos);
+}
+
+} // namespace
 
 void InitializeFeatureVecFromModel(const QRSPModel& model, FeatureVec* fv) {
   for (const auto& feature : model.feature()) {
@@ -46,10 +50,6 @@ void SubselectData(const vector<string>& split, const Dataset& input,
       output->insert(*elem);
     }
   }
-}
-
-bool IsComment(const string& line) {
-  return (line.find("#") != string::npos || line.find("//") != string::npos);
 }
 
 void LoadSplit(const string& path, vector<string>* split) {

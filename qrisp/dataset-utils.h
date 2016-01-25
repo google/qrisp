@@ -16,20 +16,21 @@
 #ifndef QRISP_DATASET_UTILS_H_
 #define QRISP_DATASET_UTILS_H_
 
-#include "qrisp/proto/config.pb.h"
-#include "qrisp/proto/parameters.pb.h"
-#include "qrisp/proto/structure.pb.h"
-#include "rna-structure.h"
-#include "utils.h"
-
 #include <algorithm>
 #include <fstream>
 #include <string>
 #include <utility>
 #include <vector>
 
+#include "qrisp/proto/config.pb.h"
+#include "qrisp/proto/parameters.pb.h"
+#include "qrisp/proto/structure.pb.h"
+#include "rna-structure.h"
+#include "utils.h"
+
 namespace qrisp {
 
+// Load a protocol buffer message stored in ASCII format.
 template <typename T>
 void LoadProtoFromFile(const string& source, T* proto) {
   std::ifstream input_stream;
@@ -41,6 +42,8 @@ void LoadProtoFromFile(const string& source, T* proto) {
   input_stream.close();
 }
 
+// Dump the content of a protocol buffer message to a text file (proto ASCII
+// format).
 template <typename T>
 void SaveProtoToFile(const string& destination, const T& proto) {
   std::ofstream output_stream;

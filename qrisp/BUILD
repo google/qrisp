@@ -153,27 +153,54 @@ cc_binary(
 #
 
 cc_test(
-    name = "plif_test",
-    srcs = ["plif_test.cc"],
+    name = "rna-structure_test",
+    srcs = ["rna-structure_test.cc"],
+    deps = [
+        "//qrisp:rna-structure",
+        "//qrisp:utils",
+        "//third_party/googletest",
+    ],
     linkopts = [
         "-lpthread",
     ],
+)
+
+cc_test(
+    name = "plif_test",
+    srcs = ["plif_test.cc"],
     deps = [
         "//qrisp:plif",
         "//qrisp:utils",
         "//third_party/googletest",
+    ],
+    linkopts = [
+        "-lpthread",
     ],
 )
 
 cc_test(
     name = "recurrences_test",
     srcs = ["recurrences_test.cc"],
-    linkopts = [
-        "-lpthread",
-    ],
     deps = [
         "//qrisp:learning-utils",
         "//qrisp:recurrences",
         "//third_party/googletest",
     ],
+    linkopts = [
+        "-lpthread",
+    ],
 )
+
+#cc_library(
+#    name = "dataset-utils",
+#    srcs = ["dataset-utils.cc"],
+#    hdrs = ["dataset-utils.h"],
+#    deps = [
+#        "//qrisp:rna-structure",
+#        "//qrisp:utils",
+#        "//qrisp/proto:parameters_proto",
+#        "//qrisp/proto:config_proto",
+#        "//qrisp/proto:structure_proto",
+#    ],
+#)
+

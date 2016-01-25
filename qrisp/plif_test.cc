@@ -43,8 +43,6 @@ TEST_F(PlifTest, AuxiliaryFunctions) {
   EXPECT_NEAR(-1.0, limits[0], kEpsilon);
   EXPECT_NEAR(0.0, limits[1], kEpsilon);
   EXPECT_NEAR(1.0, limits[2], kEpsilon);
-
-  // TODO(fabio): Add test for logspace as well.
 }
 
 TEST_F(PlifTest, EvaluatePlifAt) {
