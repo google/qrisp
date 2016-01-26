@@ -18,6 +18,10 @@
 #include <sstream>
 #include <string>
 
+#include <google/protobuf/stubs/status.h>
+#include <google/protobuf/stubs/status_macros.h>
+#include <google/protobuf/stubs/statusor.h>
+
 #include "dataset-utils.h"
 #include "model.h"
 #include "performance.h"
@@ -30,52 +34,63 @@
 #include "third_party/googleflags/include/gflags/gflags.h"
 #include "utils.h"
 
-DECLARE_bool(enable_quality_features);
-
-DEFINE_bool(resume_training, true, "Uses stored training model, if present.");
-DEFINE_string(resume_model_fn, "", "Location of the split file.");
-
-DEFINE_string(settings, "",
-              "Location of the ascii representation of the "
-              "Configuration message.");
+DEFINE_string(configuration_file, "",
+              "Location of the asciipb representation of the "
+              "ConfigMessage message.");
 
 using namespace std;
+
+using ::google::protobuf::util::Status;
+using ::google::protobuf::util::error::INVALID_ARGUMENT;
+using ::google::protobuf::util::error::OUT_OF_RANGE;
 
 namespace {
 
 // TODO(fdb): Some preliminary checks. Add more and use proto inspection instead
 // of nasty "if blah return blub".
-// bool CheckConfiguration(const qrisp::Configuration& config) {
-//  if (!(config.learning_rate() > 0.0 && config.learning_rate() <= 100.0)) {
-//    return false;
-//  }
-//  if (!(config.regularization_coeff() > 0.0 &&
-//        config.regularization_coeff() <= 10000.0)) {
-//    return false;
-//  }
-//  if (!(config.max_iter() >= -1 && config.max_iter() <= 1000)) {
-//    return false;
-//  }
-//  return true;
-//}
+Status ValidateConfigMessage(const qrisp::ConfigMessage& config) {
+  if (config.learning_rate() <= 0.0 || config.learning_rate() > 1.0) {
+    return Status(OUT_OF_RANGE, " learning_rate. Valid range: (0.0, 1.0].");
+  }
+  if (config.regularization_coeff() <= 0.0 ||
+      config.regularization_coeff() > 10000.0) {
+    return Status(OUT_OF_RANGE,
+                  " regularization_coeff. Valid range: (0.0, 10000.0].");
+  }
+  if (config.max_iter() > 1000) {
+    return Status(OUT_OF_RANGE, " max_iter. Valid range: (-inf, 1000].");
+  }
+  return Status();
+}
 
 }  // namespace
 
 int main(int argc, char** argv) {
   google::InitGoogleLogging(argv[0]);
+  google::ParseCommandLineFlags(&argc, &argv, true);
 
-  if (FLAGS_settings.empty()) {
-    LOG(ERROR) << "Found empty path for settings.";
+  if (FLAGS_configuration_file.empty()) {
+    LOG(ERROR) << "Found empty path for configuration file.";
     return EXIT_FAILURE;
   }
 
-  qrisp::Configuration config;
-  LoadProtoFromFile(FLAGS_settings, &config);
+  qrisp::ConfigMessage config;
+  LoadProtoFromFile(FLAGS_configuration_file, &config);
+
+  LOG(INFO) << "Validating ConfigMessage..";
+  const auto status = ValidateConfigMessage(config);
+  if (!status.ok()) {
+    LOG(ERROR) << status;
+    return EXIT_FAILURE;
+  }
 
   // Load structures.
   qrisp::Dataset data;
   qrisp::LoadDataset(config.input_data(), &data);
-  CHECK(data.size() > 0) << "Empty dataset.";
+  if (data.size() == 0) {
+    LOG(ERROR) << "Empty dataset.";
+    return EXIT_FAILURE;
+  }
   LOG(INFO) << "Loaded data. Size is: " << data.size();
 
   // Subselect training data.
@@ -100,7 +115,7 @@ int main(int argc, char** argv) {
 
   // Load existing model if given.
   qrisp::QRSPModel model;
-  if (config.pretrained_model_fn().empty()) {
+  if (!config.pretrained_model_fn().empty()) {
     qrisp::LoadProtoFromFile(config.pretrained_model_fn(), &model);
   }
 

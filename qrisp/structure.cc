@@ -50,12 +50,14 @@ bool Structure::InitializeFromProto(const StructureMessage& rna) {
   if (size_ < MIN_RNA_SIZE || size_ > MAX_RNA_SIZE) {
     return false;
   }
-  pairings_.assign(size_, 0);
-  sequence_.assign(size_, 0);
+  pairings_.assign(size_, IDX_NOT_SET);
+  sequence_.assign(size_, INVALID_BASE);
   quality_.assign(size_, 0.0);
   for (const auto& row : rna.rows()) {
     pairings_[row.pos()] = row.pair();
-    pairings_[row.pair()] = row.pos();
+    // if (row.pair() > != 0) {
+    //  pairings_[row.pair()] = row.pos();
+    //}
     sequence_[row.pos()] = row.base();
     quality_[row.pos()] = row.score();
   }

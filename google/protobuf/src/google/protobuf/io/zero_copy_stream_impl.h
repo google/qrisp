@@ -40,17 +40,15 @@
 #ifndef GOOGLE_PROTOBUF_IO_ZERO_COPY_STREAM_IMPL_H__
 #define GOOGLE_PROTOBUF_IO_ZERO_COPY_STREAM_IMPL_H__
 
-#include <string>
-#include <iosfwd>
 #include <google/protobuf/io/zero_copy_stream.h>
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 #include <google/protobuf/stubs/common.h>
-
+#include <iosfwd>
+#include <string>
 
 namespace google {
 namespace protobuf {
 namespace io {
-
 
 // ===================================================================
 
@@ -176,7 +174,8 @@ class LIBPROTOBUF_EXPORT FileOutputStream : public ZeroCopyOutputStream {
   int64 ByteCount() const;
 
  private:
-  class LIBPROTOBUF_EXPORT CopyingFileOutputStream : public CopyingOutputStream {
+  class LIBPROTOBUF_EXPORT CopyingFileOutputStream
+      : public CopyingOutputStream {
    public:
     CopyingFileOutputStream(int file_descriptor);
     ~CopyingFileOutputStream();
@@ -228,7 +227,8 @@ class LIBPROTOBUF_EXPORT IstreamInputStream : public ZeroCopyInputStream {
   int64 ByteCount() const;
 
  private:
-  class LIBPROTOBUF_EXPORT CopyingIstreamInputStream : public CopyingInputStream {
+  class LIBPROTOBUF_EXPORT CopyingIstreamInputStream
+      : public CopyingInputStream {
    public:
     CopyingIstreamInputStream(istream* input);
     ~CopyingIstreamInputStream();
@@ -271,7 +271,8 @@ class LIBPROTOBUF_EXPORT OstreamOutputStream : public ZeroCopyOutputStream {
   int64 ByteCount() const;
 
  private:
-  class LIBPROTOBUF_EXPORT CopyingOstreamOutputStream : public CopyingOutputStream {
+  class LIBPROTOBUF_EXPORT CopyingOstreamOutputStream
+      : public CopyingOutputStream {
    public:
     CopyingOstreamOutputStream(ostream* output);
     ~CopyingOstreamOutputStream();
@@ -314,7 +315,6 @@ class LIBPROTOBUF_EXPORT ConcatenatingInputStream : public ZeroCopyInputStream {
   bool Skip(int count);
   int64 ByteCount() const;
 
-
  private:
   // As streams are retired, streams_ is incremented and count_ is
   // decremented.
@@ -339,7 +339,6 @@ class LIBPROTOBUF_EXPORT LimitingInputStream : public ZeroCopyInputStream {
   void BackUp(int count);
   bool Skip(int count);
   int64 ByteCount() const;
-
 
  private:
   ZeroCopyInputStream* input_;

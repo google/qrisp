@@ -26,7 +26,7 @@ typedef map<int, pair<double, double>> PerformanceMetrics;
 
 bool EstimatePerformanceOnHoldout(const Dataset& data,
                                   const Predictions& predictions,
-                                  const vector<int> cluster_sizes,
+                                  const vector<idx_t> cluster_sizes,
                                   PerformanceMetrics* performance);
 }  // namespace qrisp
 #endif  // EXPERIMENTAL_USERS_FDB_QRSP_PERFORMANCE_H_

@@ -140,6 +140,10 @@ TEST_F(RNAToolsTest, IsValidStructure) {
     Structure rna("(.....", "AGAACG", {});
     EXPECT_EQ(false, rna.IsValidStructure());
   }
+  {
+    Structure rna(".......", "ACTCACT", {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0});
+    EXPECT_EQ(true, rna.IsValidStructure());
+  }
 }
 
 TEST_F(RNAToolsTest, CalculateSubstructure) {

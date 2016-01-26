@@ -16,8 +16,8 @@
 #include "cluster.h"
 
 namespace qrisp {
-bool CalculateCentroid(const vector<vector<int>> pairings_multiset,
-                       vector<int>* centroid) {
+bool CalculateCentroid(const vector<vector<idx_t>> pairings_multiset,
+                       vector<idx_t>* centroid) {
   if (pairings_multiset.size() == 0) {
     return false;
   }
@@ -37,7 +37,7 @@ bool CalculateCentroid(const vector<vector<int>> pairings_multiset,
     if (pairings.size() != fixed_size) {
       return false;
     }
-    for (int i = 1; i < pairings.size(); i++) {
+    for (size_t i = 1; i < pairings.size(); i++) {
       if (pairings[i] != 0 && i < pairings[i]) {
         auto current_pair = make_pair(i, pairings[i]);
         if (pair_frequencies.find(current_pair) != pair_frequencies.end()) {

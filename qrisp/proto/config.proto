@@ -32,18 +32,9 @@ message PerformanceProto {
 }
 
 // Next id: 18
-message Configuration {
+message ConfigMessage {
   // Enable the use of quality features during dynamic programming execution.
   optional bool enable_quality_features = 1;
-
-  //
-  optional bool plot_features = 2;
-
-  //
-  optional bool visualize_training = 3;
-
-  // The precision we are using.
-  optional double epsilon = 4 [default = 1e-6];
 
   // The learning rate that will be used in training.
   optional double learning_rate = 5;
@@ -76,6 +67,15 @@ message Configuration {
 
   // The maximum number of iterations/passes through the whole dataset.
   optional int32 max_iter = 14;
+
+  //
+  optional bool plot_features = 2;
+
+  //
+  optional bool visualize_training = 3;
+
+  // The precision we are using.
+  optional double epsilon = 4 [default = 1e-6];
 
   //
   repeated PerformanceData training_performance = 15;

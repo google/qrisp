@@ -88,6 +88,9 @@ cc_library(
     name = "cluster",
     srcs = ["cluster.cc"],
     hdrs = ["cluster.h"],
+    deps = [
+        "//third_party/googlelog:glog",
+    ],
 )
 
 cc_library(
@@ -187,6 +190,19 @@ cc_test(
     deps = [
         "//qrisp:learning-utils",
         "//qrisp:recurrences",
+        "//third_party/googletest",
+    ],
+)
+
+cc_test(
+    name = "model_test",
+    srcs = ["model_test.cc"],
+    linkopts = [
+        "-lpthread",
+        "-lm",
+    ],
+    deps = [
+        "//qrisp:model",
         "//third_party/googletest",
     ],
 )

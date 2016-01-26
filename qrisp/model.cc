@@ -29,7 +29,7 @@
 #define message(fmt, ...)
 #endif
 
-DEFINE_bool(enable_quality_features, true, "");
+static constexpr bool enable_quality_features = false;
 
 namespace qrisp {
 
@@ -85,7 +85,7 @@ void HairpinWeights(const Tuple& idx, const Structure& rna, IndexVec* indices) {
     push_one(indices, Features::HAIRPIN_LENGTH_30);
     push(indices, Features::HAIRPIN_EXTEND, hp_len - 30.0);
   }
-  if (FLAGS_enable_quality_features) {
+  if (enable_quality_features) {
     for (int k = std::get<2>(idx); k <= std::get<3>(idx); k++) {
       idx_t feature_offset =
           Features::PLIF1D_OFFSET + rna[k] * Features::PLIF_INCREMENT;
@@ -102,7 +102,7 @@ void HelixBasePairWeights(const Tuple& idx, const Structure& rna,
   const idx_t offset =
       GetBasePairOffset(std::get<0>(bases), std::get<1>(bases));
   push_one(indices, Features::BASE_PAIR_AA + offset);
-  if (FLAGS_enable_quality_features) {
+  if (enable_quality_features) {
     set<idx_t> possible_offsets = {2000, 2040, 2080, 2120, 2160,
                                    2200, 2240, 2280, 2320, 2360};
     idx_t feature_offset =
@@ -173,7 +173,7 @@ void MultiPairedWeights(const Tuple& idx, const Structure& rna,
 void MultiUnpairedWeights(const Tuple& idx, const Structure& rna,
                           IndexVec* indices) {
   push_one(indices, Features::MULTI_UNPAIRED);
-  if (FLAGS_enable_quality_features) {
+  if (enable_quality_features) {
     const Tuple bases = rna.GetBasesAt(idx);
     const idx_t feature_offset =
         Features::PLIF1D_OFFSET + std::get<0>(bases) * Features::PLIF_INCREMENT;
@@ -185,7 +185,7 @@ void MultiUnpairedWeights(const Tuple& idx, const Structure& rna,
 void OuterUnpairedWeights(const Tuple& idx, const Structure& rna,
                           IndexVec* indices) {
   push_one(indices, Features::OUTER_UNPAIRED);
-  if (FLAGS_enable_quality_features) {
+  if (enable_quality_features) {
     const Tuple bases = rna.GetBasesAt(idx);
     const idx_t feature_offset =
         Features::PLIF1D_OFFSET + std::get<0>(bases) * Features::PLIF_INCREMENT;
@@ -225,7 +225,7 @@ void SingleWeights(const Tuple& idx, const Structure& rna, IndexVec* indices) {
   push_one(indices,
            Features::TERMINAL_MISMATCH_AAAA + CalculateFullOffset(bases2));
   //
-  if (FLAGS_enable_quality_features) {
+  if (enable_quality_features) {
     for (int k = i + 1; k <= ip; k++) {
       idx_t feature_offset =
           Features::PLIF1D_OFFSET + rna[k] * Features::PLIF_INCREMENT;

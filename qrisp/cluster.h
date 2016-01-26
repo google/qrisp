@@ -16,6 +16,8 @@
 #ifndef QRISP_CLUSTER_H_
 #define QRISP_CLUSTER_H_
 
+#include "utils.h"
+
 #include <map>
 #include <utility>
 #include <vector>
@@ -28,8 +30,8 @@ typedef map<pair<int, int>, int> PairHistogram;
 
 // Each base pair comes with a frequency,
 // (i, i, frequency).
-bool CalculateCentroid(const vector<vector<int>> pairings_multiset,
-                       vector<int>* centroid);
+bool CalculateCentroid(const vector<vector<idx_t>> pairings_multiset,
+                       vector<idx_t>* centroid);
 
 }  // namespace qrisp
 

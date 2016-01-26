@@ -1,0 +1,27 @@
+# The maximum number of iterations/passes through the whole dataset. A
+# non-positive value indicates that prediction mode should be used.
+max_iter: 10
+
+# The learning rate that will be used in training.
+learning_rate: 0.77
+
+# The factor in front of the regularization part of the objective function.
+regularization_coeff: 1.0
+
+# Enable the use of quality features during dynamic programming execution.
+enable_quality_features: true
+
+# The location of the file that contains the training data. Format is
+input_data: 'examples/minimalistic/data.asciipb'
+
+# The file name of the file holding a list of files that shall be used in
+split_fn: 'examples/minimalistic/train.txt'
+
+# The file name of the file holding a list of files that shall be used in
+holdout_fn: 'examples/minimalistic/holdout.txt'
+
+# File path were the final model file will be stored under.
+model_fn: '/tmp/final-model.asciipb'
+
+# All models and logging files will be stored under this directory.
+result_dir: '/tmp'

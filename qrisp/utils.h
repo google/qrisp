@@ -30,7 +30,7 @@ namespace qrisp {
 
 using namespace std;
 
-typedef uint32_t idx_t;
+typedef int32_t idx_t;
 typedef double score_t;
 typedef const idx_t& CIR;
 
@@ -40,11 +40,16 @@ typedef map<string, Structure> Dataset;
 
 constexpr idx_t MIN_RNA_SIZE = 6;
 constexpr idx_t MAX_RNA_SIZE = 10000;
-constexpr idx_t IDX_NOT_SET = 20000;
-constexpr idx_t INVALID_BASE = 30000;
-constexpr idx_t NDX = 40000;
-constexpr score_t INVALID_QUALITY = -1.0;
+
+// constexpr idx_t IDX_NOT_SET = 20000;
+// constexpr idx_t INVALID_BASE = 30000;
+// constexpr idx_t NDX = 40000;
+
 constexpr score_t LOG_ZERO = -numeric_limits<score_t>::max();
+constexpr idx_t IDX_NOT_SET = -1;
+constexpr idx_t INVALID_BASE = -2;
+constexpr idx_t NDX = -3;
+constexpr score_t INVALID_QUALITY = -1.0;
 
 typedef pair<idx_t, idx_t> IntPair;
 typedef std::tuple<idx_t, idx_t, idx_t, idx_t> Tuple;
