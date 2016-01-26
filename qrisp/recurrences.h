@@ -85,8 +85,8 @@ class LossFunctor {
   LossFunctor(const Structure& structure, DECODING_MODE dm, score_t newloss)
       : dmode(dm), loss_(newloss) {
     structure.GetPairings(&pairings_);
-    for (size_t i = 0; i < structure.GetSize(); i++) {
-      for (size_t j = i + 1; j < structure.GetSize(); j++) {
+    for (size_t i = 0; i < structure.Size(); i++) {
+      for (size_t j = i + 1; j < structure.Size(); j++) {
         double loss_term = 0.0;
         for (size_t z = i; z < j; z++) {
           if (pairings_[z + 1] != 0) {

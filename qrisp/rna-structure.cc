@@ -29,7 +29,6 @@ Structure::Structure(const Structure& rna) {
   quality_.assign(rna.quality_.cbegin(), rna.quality_.cend());
 }
 
-
 bool Structure::InitializeFromProto(const StructureMessage& rna) {
   size_ = rna.length() + 1;
   has_quality_ = false;
@@ -64,7 +63,6 @@ bool Structure::InitializeFromProto(const StructureMessage& rna) {
     return false;
   }
   if (rna.confidence_size() + 1 == size_) {
-
   }
   pairings_.assign(rna.length(), 0);
   quality_.assign(rna.confidence().begin(), rna.confidence().end());
@@ -119,7 +117,7 @@ bool Structure::Initialize(const string& brackets, const string& seq,
   return false;
 }
 
-//Structure::Structure(const vector<idx_t>& pairings, const string& seq,
+// Structure::Structure(const vector<idx_t>& pairings, const string& seq,
 //                     const vector<score_t>& qual)
 //  pairings_.assign(pairings.cbegin(), pairings.cend());
 //  if (!qual.empty()) {
@@ -133,10 +131,9 @@ bool Structure::Initialize(const string& brackets, const string& seq,
 //  }
 //}
 
-
 bool Structure::ConvertToProto(StructureMessage* rna) const {
   rna->set_length(pairings_.size() - 1);
-  for (int i=1; i < pairings_.size(); i++) {
+  for (int i = 1; i < pairings_.size(); i++) {
     if (pairings_[i] != 0 && i < pairings_[i]) {
       auto p = rna->add_pair();
       p->set_lo(i);
@@ -238,7 +235,6 @@ bool Structure::IsValidStructure() const {
   // return !this->ContainsPseudoKnot();
   return true;
 }
-
 
 // This function calulates the base pairs of all 0-,1- and 2-loops of a given
 // structure.

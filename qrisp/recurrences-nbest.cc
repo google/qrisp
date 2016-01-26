@@ -86,21 +86,20 @@ void FillTable(const Structure& input, DECODING_MODE vmode, double loss_factor,
                const FeatureVec& params, DPTable* tbl) {
   // Initialize scoring functions.
   auto ph = std::placeholders::_1;
-  auto Hairpin = BIND_SC(&HairpinWeights) auto HelixBasePair =
-      BIND_SC(&HelixBasePairWeights) auto HelixChange =
-          BIND_SC(&HelixChangeWeights) auto HelixClosing =
-              BIND_SC(&HelixClosingWeights) auto HelixExtend = BIND_SC(
-                  &HelixExtendWeights) auto HelixStacking =
-                  BIND_SC(&HelixStackingWeights) auto MultiBase = BIND_SC(
-                      &MultiBaseWeights) auto MultiMismatch =
-                      BIND_SC(&MultiMismatchWeights) auto MultiPaired = BIND_SC(
-                          &MultiPairedWeights) auto MultiUnpaired =
-                          BIND_SC(&MultiUnpairedWeights) auto OuterBranch =
-                              BIND_SC(&OuterBranchWeights) auto OuterUnpaired =
-                                  BIND_SC(&OuterUnpairedWeights) auto Single =
-                                      BIND_SC(&SingleWeights)
-                                          const idx_t rna_size =
-                                              input.GetSize();
+  auto Hairpin = BIND_SC(&HairpinWeights);
+  auto HelixBasePair = BIND_SC(&HelixBasePairWeights);
+  auto HelixChange = BIND_SC(&HelixChangeWeights);
+  auto HelixClosing = BIND_SC(&HelixClosingWeights);
+  auto HelixExtend = BIND_SC(&HelixExtendWeights);
+  auto HelixStacking = BIND_SC(&HelixStackingWeights);
+  auto MultiBase = BIND_SC(&MultiBaseWeights);
+  auto MultiMismatch = BIND_SC(&MultiMismatchWeights);
+  auto MultiPaired = BIND_SC(&MultiPairedWeights);
+  auto MultiUnpaired = BIND_SC(&MultiUnpairedWeights);
+  auto OuterBranch = BIND_SC(&OuterBranchWeights);
+  auto OuterUnpaired = BIND_SC(&OuterUnpairedWeights);
+  auto Single = BIND_SC(&SingleWeights);
+  const idx_t rna_size = input.Size();
   const size_t length = rna_size - 1;
   // Create the functor for losses based on the input structure.
   LossFunctor* loss_functor = new LossFunctor(input, vmode, loss_factor);
@@ -278,7 +277,7 @@ score_t PerformTraceback(const int n, const DPTable& tbl, const int rna_size,
 double DecodePaths(const int n, const Structure& rna, const FeatureVec& model,
                    const DECODING_MODE& vmode, const double& loss_factor,
                    vector<vector<idx_t>>* result) {
-  const idx_t rna_size = rna.GetSize();
+  const idx_t rna_size = rna.Size();
   FeatureVec model_transformed = model;
   InitializeFeatures(&model_transformed);
   // Create and fill dynamic programming tables.

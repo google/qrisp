@@ -240,7 +240,7 @@ TEST_F(RecurrencesTest, EncodeDecodeTraceback) {
 
 TEST_F(RecurrencesTest, FillTables) {
   Structure rna(".......", "ACTCACT", {});
-  const idx_t rna_size = rna.GetSize();
+  const idx_t rna_size = rna.Size();
   // Create and fill dynamic programming tables.
   DPTable* scores = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   DPTable* traceback = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
@@ -255,7 +255,7 @@ TEST_F(RecurrencesTest, FillTables) {
 
 TEST_F(RecurrencesTest, PerformTraceback) {
   Structure rna("...(((....)))......", "ACCATCTCCCGAACCAGCT", {});
-  const idx_t rna_size = rna.GetSize();
+  const idx_t rna_size = rna.Size();
   DPTable* scores = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   DPTable* traceback = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   const DECODING_MODE vmode = LOSS_DISABLED;
@@ -272,7 +272,7 @@ TEST_F(RecurrencesTest, PerformTraceback) {
 
 TEST_F(RecurrencesTest, DecodeBestPath) {
   Structure rna("...(((....)))......", "ACCATCTCCCGAACCAGCT", {});
-  const idx_t rna_size = rna.GetSize();
+  const idx_t rna_size = rna.Size();
   DPTable* scores = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   DPTable* traceback = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   FeatureVec model;
@@ -312,7 +312,7 @@ TEST_F(RecurrencesTest, DecodeBestPath) {
 
 TEST_F(RecurrencesTest, DecodeBestPathRandShort) {
   Structure rna(".......", "ACCCTTA", {});
-  const idx_t rna_size = rna.GetSize();
+  const idx_t rna_size = rna.Size();
   DPTable* scores = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   DPTable* traceback = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   FeatureVec model;
@@ -355,7 +355,7 @@ TEST_F(RecurrencesTest, DecodeBestPathRand) {
   // Structure rna("...(((....)))......",
   //                 "ACCATCTCCCGAACCAGCT");
   Structure rna("............", "ACCTTTTTTATT", {});
-  const idx_t rna_size = rna.GetSize();
+  const idx_t rna_size = rna.Size();
   DPTable* scores = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   DPTable* traceback = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   FeatureVec model;
@@ -405,7 +405,7 @@ TEST_F(RecurrencesTest, DecodeBestPathRandWithLoss) {
   // Structure rna("...(((....)))......",
   //                 "ACCATCTCCCGAACCAGCT");
   Structure rna("............", "ACCTTTTTTATT", {});
-  const idx_t rna_size = rna.GetSize();
+  const idx_t rna_size = rna.Size();
   DPTable* scores = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   DPTable* traceback = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   FeatureVec model;
@@ -454,7 +454,7 @@ TEST_F(RecurrencesTest, DecodeBestPathRandWithLoss) {
 
 TEST_F(RecurrencesTest, DecodeBestPathRandLarge) {
   Structure rna("...(((....)))......", "ACCATCTCCCGAACCAGCT", {});
-  const idx_t rna_size = rna.GetSize();
+  const idx_t rna_size = rna.Size();
   DPTable* scores = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   DPTable* traceback = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   FeatureVec model;
@@ -502,7 +502,7 @@ TEST_F(RecurrencesTest, DecodeBestPathRandLarge) {
 
 TEST_F(RecurrencesTest, DecodeBestPathRandLargeLoss) {
   Structure rna("...(((....)))......", "ACCATCTCCCGAACCAGCT", {});
-  const idx_t rna_size = rna.GetSize();
+  const idx_t rna_size = rna.Size();
   DPTable* scores = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   DPTable* traceback = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   FeatureVec model;

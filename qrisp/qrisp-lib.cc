@@ -115,7 +115,7 @@ void StartTraining(const Dataset& training_set, const Dataset& holdout_set,
   // Variables shared by all modes.
   int max_slack = 0;
   for (const auto& elem : training_set) {
-    max_slack += elem.second.GetSize();
+    max_slack += elem.second.Size();
   }
   LOG(INFO) << "Max. theoretic slack: " << max_slack;
   // Initialize stochastic gradient descent solver.

@@ -23,7 +23,7 @@ bool IsComment(const string& line) {
   return (line.find("#") != string::npos || line.find("//") != string::npos);
 }
 
-} // namespace
+}  // namespace
 
 void InitializeFeatureVecFromModel(const QRSPModel& model, FeatureVec* fv) {
   for (const auto& feature : model.feature()) {
@@ -69,7 +69,7 @@ void LoadSplit(const string& path, vector<string>* split) {
 }
 
 void LoadDataset(const string& source, Dataset* data) {
-  RNASStructures structures;
+  StructureSetMessage structures;
   LoadProtoFromFile(source, &structures);
   for (const auto& elem : structures.item()) {
     auto it = data->insert(make_pair(elem.id(), Structure()));
@@ -82,7 +82,7 @@ void LoadDataset(const string& source, Dataset* data) {
 }
 
 void SaveDataset(const string& destination, const Dataset& data) {
-  RNASStructures structures;
+  StructureSetMessage structures;
   for (const auto& elem : data) {
     const auto item = structures.add_item();
     item->set_id(elem.first);
@@ -93,16 +93,16 @@ void SaveDataset(const string& destination, const Dataset& data) {
 std::tuple<double, double> SSMeasure(const Structure& ref,
                                      const Structure& pred) {
   const static auto null_tuple = std::make_tuple(0.0, 0.0);
-  if (ref.GetSize() == 0) {
+  if (ref.Size() == 0) {
     return null_tuple;
   }
-  CHECK(ref.GetSize() == pred.GetSize());
+  CHECK(ref.Size() == pred.Size());
 
   int num_ref_pairs = 0;
   int num_pred_pairs = 0;
   int correctly_paired = 0;
 
-  for (int i = 1; i < pred.GetSize(); i++) {
+  for (int i = 1; i < pred.Size(); i++) {
     if (pred(i) != 0) {
       num_pred_pairs++;
     }

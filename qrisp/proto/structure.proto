@@ -21,8 +21,10 @@ package qrisp;
 message StructureMessage {
   // Encodes the structure in terms of base pairs.
   // We only store the paired positions. Each pair consists of a lo, hi pair
-  // where lo is holding the lower index of the two indices (hi the higher, duh).
-  // Example: .((....)). translates to 0980000320, so we store the pairs (2,9) and (3,8).
+  // where lo is holding the lower index of the two indices (hi the higher,
+  // duh).
+  // Example: .((....)). translates to 0980000320, so we store the pairs (2,9)
+  // and (3,8).
   message Pair {
     required int32 lo = 1;
     required int32 hi = 2;
@@ -49,7 +51,7 @@ message StructureMessage {
 }
 
 // A wrapper for a set of RNA secondary structures.
-message RNASStructuresSetMessage {
+message StructureSetMessage {
   // An Item is a single RNASStructure together with an identifier.
   message Item {
     required string id = 1;

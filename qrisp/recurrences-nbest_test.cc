@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "experimental/users/fdb/qrsp/proto/parameters.pb.h"
 #include "experimental/users/fdb/qrsp/recurrences-nbest.h"
+#include "experimental/users/fdb/qrsp/proto/parameters.pb.h"
 #include "experimental/users/fdb/qrsp/recurrences.h"
 #include "experimental/users/fdb/qrsp/utils.h"
 #include "testing/base/public/gmock.h"
@@ -221,7 +221,7 @@ TEST_F(RecurrencesNbestTest, CellInserterBifurcation) {
 //
 TEST_F(RecurrencesNbestTest, FillNBestTable) {
   Structure rna("(((..((...))....)))", "ACCATCTCCCGAACCAGCT", {});
-  const int rna_size = rna.GetSize();
+  const int rna_size = rna.Size();
   FeatureVec model;
   const double s = 12.34;
   std::default_random_engine gen(s);
@@ -236,7 +236,7 @@ TEST_F(RecurrencesNbestTest, FillNBestTable) {
 
 TEST_F(RecurrencesNbestTest, DecodeNBest) {
   Structure rna("(((..((...))....)))", "ACCATCTCCCGAACCAGCT", {});
-  const idx_t rna_size = rna.GetSize();
+  const idx_t rna_size = rna.Size();
   FeatureVec model;
   const double s = 12.34;
   std::default_random_engine gen(s);
@@ -282,7 +282,7 @@ TEST_F(RecurrencesNbestTest, DecodeNBest) {
 
 TEST_F(RecurrencesNbestTest, DecodeNBestLossEnabled) {
   Structure rna("(((..((...))....)))", "ACCATCTCCCGAACCAGCT", {});
-  const idx_t rna_size = rna.GetSize();
+  const idx_t rna_size = rna.Size();
   FeatureVec model;
   const double s = 12.34;
   std::default_random_engine gen(s);

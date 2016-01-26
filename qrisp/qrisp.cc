@@ -45,7 +45,7 @@ namespace {
 
 // TODO(fdb): Some preliminary checks. Add more and use proto inspection instead
 // of nasty "if blah return blub".
-//bool CheckConfiguration(const qrisp::Configuration& config) {
+// bool CheckConfiguration(const qrisp::Configuration& config) {
 //  if (!(config.learning_rate() > 0.0 && config.learning_rate() <= 100.0)) {
 //    return false;
 //  }

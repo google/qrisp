@@ -122,7 +122,8 @@ class Structure {
 };
 
 // This constructor expects a RNA structure in bracket notation form.
-//Structure(const string& brackets, const string& seq, const vector<score_t>& qual);
+// Structure(const string& brackets, const string& seq, const vector<score_t>&
+// qual);
 
 // The following constructors expects an RNA structure given as a vector of
 // pairs.
@@ -136,7 +137,7 @@ void BracketsToPairings(const string& brackets, vector<idx_t>* pairings);
 // In the following we define two loss functions:
 // * Pairwise loss, and
 // * Hamming loss.
-// 
+//
 // The distinction between pairwise and Hamming loss can be explained by the
 // following example. Let a and b be defined as follows:
 // a := .((....))

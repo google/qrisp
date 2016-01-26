@@ -206,7 +206,7 @@ void SingleWeights(const Tuple& idx, const Structure& rna, IndexVec* indices) {
   // assert(ip > 0);
   // assert(j > 0);
   // assert(jp > 0);
-  // const idx_t rna_size = rna.GetSize();
+  // const idx_t rna_size = rna.Size();
   // assert(i < rna_size);
   // assert(ip < rna_size);
   // assert(j < rna_size);
@@ -321,7 +321,7 @@ void CalculateFeatures(const Structure& structure, FeatureVec* features) {
   vector<Substructure> substructures;
   vector<bool> acc_pos;
   structure.CalculateSubstructure(&substructures, &acc_pos);
-  // const int length = structure.GetSize() - 1;
+  // const int length = structure.etSize() - 1;
   // Some counting function do not need positional information. This tuple
   // provides neutral positional information for these cases.
   const Tuple zero_tuple = Tuple(1, 1, 1, 1);
@@ -330,7 +330,7 @@ void CalculateFeatures(const Structure& structure, FeatureVec* features) {
                                                    << endl);
   if (substructures.size() == 0) {
     message("No substructures present %c", '\n');
-    for (int i = 1; i < structure.GetSize(); i++) {
+    for (int i = 1; i < structure.Size(); i++) {
       OuterUnpairedCounter(mt1(i));
     }
     // CountOuterUnpairedInterval(1, length);
