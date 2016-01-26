@@ -51,24 +51,26 @@ class RNAToolsTest : public testing::Test {
   virtual void TearDown() {}
 };
 
-constexpr const char kStructureAsciipb[] = R"(
-  length: 6
-  base: 0
-  base: 0
-  base: 0
-  base: 0
-  base: 0
-  base: 0
-)";
+static constexpr char kStructureAsciipb[] = R"(
+  rows { pos: 1 }
+  rows { pos: 2 }
+  rows { pos: 3 }
+  rows { pos: 4 }
+  rows { pos: 5 }
+  rows { pos: 6 }
+  )";
 
-TEST_F(RNAToolsTest, Initialization) {
+TEST_F(RNAToolsTest, ParseProtoFromString) {
   Structure s;
-  EXPECT_TRUE(s.Initialize("......", "AAAAAA", {}));
-  Structure t;
-  StructureMessage m;
-  m.ParseFromString(kStructureAsciipb);
+  s.InitializeFromAsciiPb(kStructureAsciipb);
+  // Structure t;
+  // StructureMessage m;
+  // m.ParseFromString(kStructureAsciipb);
+  // LOG(INFO) << m.rows_size();
   // EXPECT_TRUE(t.InitializeFromProto(m));
 }
+
+TEST_F(RNAToolsTest, Initialization) {}
 
 // TEST_F(RNAToolsTest, LoadTestdata) {
 //  StructureMessages expected_results;
@@ -271,27 +273,27 @@ TEST_F(RNAToolsTest, Initialization) {
 // k  EXPECT_EQ(expected, pairings);
 // k}
 
-// TEST_F(RNAToolsTest, PairwiseLoss) {
-//  EXPECT_EQ(0, PairwiseLoss(Structure("......", "AAAAAA", {}),
-//                            Structure("......", "AAGGAA", {})));
-//  EXPECT_EQ(2, PairwiseLoss(Structure(".(..).", "AAAAAA", {}),
-//                            Structure("......", "AAGGAA", {})));
-//  EXPECT_EQ(4, PairwiseLoss(Structure("((..))", "AAAAAA", {}),
-//                            Structure("......", "AAGGAA", {})));
-//  EXPECT_EQ(3, PairwiseLoss(Structure(".(..).", "AAAAAA", {}),
-//                            Structure(".(...)", "AAGGAA", {})));
-//}
-//
-// TEST_F(RNAToolsTest, HammingLoss) {
-//  EXPECT_EQ(0, HammingLoss(Structure("......", "AAAAAA", {}),
-//                           Structure("......", "AAGGAA", {})));
-//  EXPECT_EQ(2, HammingLoss(Structure(".(..).", "AAAAAA", {}),
-//                           Structure("......", "AAGGAA", {})));
-//  EXPECT_EQ(4, HammingLoss(Structure("((..))", "AAAAAA", {}),
-//                           Structure("......", "AAGGAA", {})));
-//  EXPECT_EQ(2, HammingLoss(Structure(".(..).", "AAAAAA", {}),
-//                           Structure(".(...)", "AAGGAA", {})));
-//}
+TEST_F(RNAToolsTest, PairwiseLoss) {
+  EXPECT_EQ(0, PairwiseLoss(Structure("......", "AAAAAA", {}),
+                            Structure("......", "AAGGAA", {})));
+  EXPECT_EQ(2, PairwiseLoss(Structure(".(..).", "AAAAAA", {}),
+                            Structure("......", "AAGGAA", {})));
+  EXPECT_EQ(4, PairwiseLoss(Structure("((..))", "AAAAAA", {}),
+                            Structure("......", "AAGGAA", {})));
+  EXPECT_EQ(3, PairwiseLoss(Structure(".(..).", "AAAAAA", {}),
+                            Structure(".(...)", "AAGGAA", {})));
+}
+
+TEST_F(RNAToolsTest, HammingLoss) {
+  EXPECT_EQ(0, HammingLoss(Structure("......", "AAAAAA", {}),
+                           Structure("......", "AAGGAA", {})));
+  EXPECT_EQ(2, HammingLoss(Structure(".(..).", "AAAAAA", {}),
+                           Structure("......", "AAGGAA", {})));
+  EXPECT_EQ(4, HammingLoss(Structure("((..))", "AAAAAA", {}),
+                           Structure("......", "AAGGAA", {})));
+  EXPECT_EQ(2, HammingLoss(Structure(".(..).", "AAAAAA", {}),
+                           Structure(".(...)", "AAGGAA", {})));
+}
 
 }  // namespace
 }  // namespace qrisp

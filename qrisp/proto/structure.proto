@@ -25,29 +25,27 @@ message StructureMessage {
   // duh).
   // Example: .((....)). translates to 0980000320, so we store the pairs (2,9)
   // and (3,8).
-  message Pair {
-    required int32 lo = 1;
-    required int32 hi = 2;
-  }
-  repeated Pair pair = 1;
-
-  // The total length of the secondary structure.
-  optional int32 length = 2;
 
   // The sequence of nucleotides.
-  repeated int32 base = 3;
+  message Row {
+    // Position of the structure. Starting with 1.
+    optional uint32 pos = 1;
 
-  // Position-wise confidence values.
-  repeated float confidence = 4;
+    // If pos is a paired nucleotide pair is the index of the partner. If pos is
+    // unpaired then this is 0.
+    optional uint32 pair = 2 [default = 0];
 
-  // Bracket representation of the structure. Example "(.(...))".
-  optional string brackets = 5;
+    // The base given as an integer index A=0, C=1, G=2, U=3.
+    optional uint32 base = 3 [default = 0];
 
-  // Sequence information as a string. Example: "CGGAAA".
-  optional string sequence = 6;
+    // A position-specific real-valued confidence / quality / score.
+    optional float score = 4 [default = 0.0];
+  }
+
+  repeated Row rows = 1;
 
   // An optional description of the structure.
-  optional string description = 7;
+  optional string description = 2;
 }
 
 // A wrapper for a set of RNA secondary structures.
@@ -60,3 +58,27 @@ message StructureSetMessage {
   }
   repeated Item item = 3;
 }
+
+// message Pair {
+//  required int32 lo = 1;
+//  required int32 hi = 2;
+//}
+// repeated Pair pairs = 1;
+
+//// The total length of the secondary structure.
+// optional int32 length = 2;
+
+// The sequence of nucleotides.
+// repeated int32 base = 3;
+
+//// Position-wise confidence values.
+// repeated float confidence = 4;
+
+//// Bracket representation of the structure. Example "(.(...))".
+// optional string brackets = 5;
+
+//// Sequence information as a string. Example: "CGGAAA".
+// optional string sequence = 6;
+
+//// An optional description of the structure.
+// optional string description = 7;

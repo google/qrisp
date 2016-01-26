@@ -16,58 +16,49 @@
 #include "structure.h"
 
 #include <glog/logging.h>
+#include <google/protobuf/text_format.h>
 #include <algorithm>
 
 namespace qrisp {
 
 Structure::Structure(const Structure& rna) {
   size_ = rna.Size();
-  has_quality_ = rna.has_quality_;
-  CHECK(size_ >= MIN_RNA_SIZE);
   sequence_.assign(rna.sequence_.cbegin(), rna.sequence_.cend());
   pairings_.assign(rna.pairings_.cbegin(), rna.pairings_.cend());
   quality_.assign(rna.quality_.cbegin(), rna.quality_.cend());
 }
 
+Structure::Structure(const string& brackets, const string& seq,
+                     const vector<score_t>& qual) {
+  size_ = brackets.size() + 1;
+  LoadPairingsFromString(brackets);
+  LoadSequenceFromString(seq);
+  if (qual.size() > 0) {
+    quality_.assign(qual.cbegin(), qual.cend());
+  }
+  CHECK(pairings_.size() == size_ && sequence_.size() == size_ &&
+        (quality_.size() == size_ || quality_.size() == 0));
+}
+
+bool Structure::InitializeFromAsciiPb(const string& input) {
+  StructureMessage m;
+  ::google::protobuf::TextFormat::ParseFromString(input, &m);
+  return InitializeFromProto(m);
+}
+
 bool Structure::InitializeFromProto(const StructureMessage& rna) {
-  size_ = rna.length() + 1;
-  has_quality_ = false;
-  if (rna.base_size() > 0) {
-    sequence_.assign(rna.base().begin(), rna.base().end());
-  } else if (!rna.sequence().empty()) {
-    const auto seq = rna.sequence();
-    sequence_.assign(seq.size(), IDX_NOT_SET);
-    for (int i = 0; i < seq.size(); i++) {
-      idx_t base = seq[i] - 65;
-      if (base > 20) {
-        return false;
-      }
-      sequence_[i + 1] = char2int[base];
-    }
-  } else {
+  size_ = rna.rows_size() + 1;
+  if (size_ < MIN_RNA_SIZE || size_ > MAX_RNA_SIZE) {
     return false;
   }
-  // Initialize pairings with zero everywhere. Position zero is set to a dummy
-  // value.
-  pairings_.assign(rna.length(), 0);
-  pairings_[0] = IDX_NOT_SET;
-  if (rna.pair_size() > 0) {
-    for (const auto& pair : rna.pair()) {
-      pairings_.assign(rna.length(), 0);
-      pairings_[pair.lo()] = pair.hi();
-      pairings_[pair.hi()] = pair.lo();
-    }
-  } else if (!rna.brackets().empty()) {
-    BracketsToPairings(rna.brackets(), &pairings_);
-  } else {
-    return false;
-  }
-  if (rna.confidence_size() + 1 == size_) {
-  }
-  pairings_.assign(rna.length(), 0);
-  quality_.assign(rna.confidence().begin(), rna.confidence().end());
-  if (rna.confidence_size() == pairings_.size()) {
-    has_quality_ = true;
+  pairings_.assign(size_, 0);
+  sequence_.assign(size_, 0);
+  quality_.assign(size_, 0.0);
+  for (const auto& row : rna.rows()) {
+    pairings_[row.pos()] = row.pair();
+    pairings_[row.pair()] = row.pos();
+    sequence_[row.pos()] = row.base();
+    quality_[row.pos()] = row.score();
   }
   return true;
 }
@@ -79,73 +70,40 @@ bool Structure::LoadPairingsFromString(const string& input) {
 }
 
 bool Structure::LoadPairingsFromVector(const vector<idx_t>& input) {
+  CHECK(input.size() + 1 == size_);
   pairings_.assign(input.cbegin(), input.cend());
+  pairings_.emplace(pairings_.begin(), IDX_NOT_SET);
   return true;
 }
 
 bool Structure::LoadSequenceFromString(const string& input) {
-  size_ = input.size() + 1;
-  CHECK(size_ >= MIN_RNA_SIZE);
-  CHECK(size_ < MAX_RNA_SIZE);
-  sequence_.assign(size_, IDX_NOT_SET);
-  for (int i = 0; i < input.size(); i++) {
-    idx_t base = input[i] - 65;
-    CHECK(base <= 20);
-    sequence_[i + 1] = char2int[base];
-  }
-  return true;
-}
-
-bool Structure::LoadSequenceFromVector(const vector<idx_t>& input) {
-  sequence_.assign(input.begin(), input.end());
-  return true;
-}
-
-bool Structure::Initialize(const string& brackets, const string& seq,
-                           const vector<score_t>& qual) {
-  size_ = brackets.size() + 1;
-  LoadPairingsFromString(brackets);
-  LoadSequenceFromString(seq);
-  if (qual.size() > 0) {
-    quality_.assign(qual.cbegin(), qual.cend());
-    has_quality_ = true;
-  }
-  if (pairings_.size() == size_ && sequence_.size() == size_ &&
-      (quality_.size() == size_ || quality_.size() == 0)) {
+  if (input.size() + 1 == size_) {
+    sequence_.assign(size_, IDX_NOT_SET);
+    for (int i = 0; i < input.size(); i++) {
+      idx_t base = input[i] - 65;
+      CHECK(base <= 20);
+      sequence_[i + 1] = char2int[base];
+    }
     return true;
   }
   return false;
 }
 
-// Structure::Structure(const vector<idx_t>& pairings, const string& seq,
-//                     const vector<score_t>& qual)
-//  pairings_.assign(pairings.cbegin(), pairings.cend());
-//  if (!qual.empty()) {
-//    if (size_ != qual.size() + 1) {
-//      LOG(ERROR) << "Quality vector has wrong size!";
-//      exit(EXIT_FAILURE);
-//    }
-//    quality_.assign(qual.cbegin(), qual.cend());
-//    quality_.emplace(quality_.begin(), INVALID_QUALITY);
-//    has_quality_ = true;
-//  }
-//}
-
-bool Structure::ConvertToProto(StructureMessage* rna) const {
-  rna->set_length(pairings_.size() - 1);
-  for (int i = 1; i < pairings_.size(); i++) {
-    if (pairings_[i] != 0 && i < pairings_[i]) {
-      auto p = rna->add_pair();
-      p->set_lo(i);
-      p->set_lo(pairings_[i]);
-    }
-  }
-  rna->mutable_base()->Resize(size_, -1);
-  std::copy(sequence_.begin(), sequence_.end(), rna->mutable_base()->begin());
-  rna->mutable_confidence()->Resize(size_, -1);
-  std::copy(quality_.begin(), quality_.end(),
-            rna->mutable_confidence()->begin());
+bool Structure::LoadSequenceFromVector(const vector<idx_t>& input) {
+  CHECK(input.size() + 1 == size_);
+  sequence_.assign(input.begin(), input.end());
+  sequence_.emplace(sequence_.begin(), INVALID_BASE);
   return true;
+}
+
+void Structure::ConvertToProto(StructureMessage* rna) const {
+  for (int i = 1; i < pairings_.size(); i++) {
+    auto* row = rna->add_rows();
+    row->set_pos(i);
+    row->set_pair(pairings_[i]);
+    row->set_base(sequence_[i]);
+    row->set_score(quality_[i]);
+  }
 }
 
 Tuple Structure::GetBasesAt(const Tuple& t) const {
@@ -177,7 +135,6 @@ void Structure::SetPairings(const vector<idx_t>& p) {
 }
 
 void Structure::SetQuality(const vector<score_t>& q) {
-  has_quality_ = true;
   quality_.clear();
   quality_.insert(quality_.begin(), q.cbegin(), q.cend());
 }
@@ -189,7 +146,6 @@ void Structure::GetQuality(vector<score_t>* q) const {
 
 Structure& Structure::operator=(const Structure& s) {
   size_ = s.size_;
-  has_quality_ = s.has_quality_;
   pairings_.clear();
   pairings_.insert(pairings_.begin(), s.pairings_.cbegin(), s.pairings_.cend());
   sequence_.clear();
@@ -336,8 +292,7 @@ bool operator==(const Structure& a, const Structure& b) {
     return false;
   }
   for (int i = 1; i < a.Size(); i++) {
-    if (a(i) != b(i) || a[i] != b[i] ||
-        (a.HasQuality() && b.HasQuality() && a.quality(i) != b.quality(i))) {
+    if (a(i) != b(i) || a[i] != b[i] || (a.quality(i) != b.quality(i))) {
       return false;
     }
   }

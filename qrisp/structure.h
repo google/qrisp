@@ -42,10 +42,14 @@ class Substructure;
 class Structure {
  public:
   // Initialize an emtpy structure.
-  Structure() : size_(0), has_quality_(false) {}
+  Structure() : size_(0) {}
 
   // Copy constructor for Structure objects themselves.
   Structure(const Structure& rna);
+
+  // Initialize the structure directly from string representations of the data.
+  Structure(const string& brackets, const string& seq,
+            const vector<score_t>& qual);
 
   // The size of the structure is defined as the size of the sequence + 1.
   inline idx_t Size() const { return size_; }
@@ -86,8 +90,6 @@ class Structure {
   void CalculateSubstructure(vector<Substructure>* result,
                              vector<bool>* accessible_positions) const;
 
-  inline bool HasQuality() const { return has_quality_; }
-
   // Performs some sanity checks.
   bool ContainsPseudoKnot() const;
 
@@ -99,12 +101,10 @@ class Structure {
   // Initialize the Structure object with information coming from the proto.
   bool InitializeFromProto(const StructureMessage& rna);
 
-  // Initialize the structure directly from string representations of the data.
-  bool Initialize(const string& brackets, const string& seq,
-                  const vector<score_t>& qual);
+  bool InitializeFromAsciiPb(const string& input);
 
   // Convert the structure back to the proto representation.
-  bool ConvertToProto(StructureMessage* rna) const;
+  void ConvertToProto(StructureMessage* rna) const;
 
  private:
   bool LoadPairingsFromString(const string& input);
@@ -117,8 +117,6 @@ class Structure {
   vector<score_t> quality_;
 
   idx_t size_;
-
-  bool has_quality_;
 };
 
 // This constructor expects a RNA structure in bracket notation form.

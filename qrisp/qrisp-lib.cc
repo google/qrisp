@@ -154,10 +154,6 @@ void StartTraining(const Dataset& training_set, const Dataset& holdout_set,
     std::shuffle(ids.begin(), ids.end(), std::default_random_engine(s));
     for (const auto& key : ids) {
       const Structure& true_structure = training_set.find(key)->second;
-      if (config.enable_quality_features() && !true_structure.HasQuality()) {
-        LOG(ERROR) << "Quality features enabled, but structure has no quality "
-                      "information.";
-      }
       vector<idx_t> true_pairings;
       true_structure.GetPairings(&true_pairings);
       // Decode new structure based on model.
