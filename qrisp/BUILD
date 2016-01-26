@@ -194,6 +194,19 @@ cc_test(
     ],
 )
 
+cc_test(
+    name = "model_test",
+    srcs = ["model_test.cc"],
+    linkopts = [
+        "-lpthread",
+        "-lm",
+    ],
+    deps = [
+        "//qrisp:model",
+        "//third_party/googletest",
+    ],
+)
+
 #cc_library(
 #    name = "dataset-utils",
 #    srcs = ["dataset-utils.cc"],

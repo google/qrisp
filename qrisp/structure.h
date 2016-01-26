@@ -67,6 +67,7 @@ class Structure {
   }
 
   inline double quality(idx_t i) const {
+    LOG(INFO) << "quality idx: " << i;
     CHECK(0 < i && i < quality_.size());
     return quality_[i];
   }

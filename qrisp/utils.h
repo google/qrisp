@@ -19,6 +19,7 @@
 #include <glog/logging.h>
 #include <cfloat>
 #include <cstdint>
+#include <limits>
 #include <map>
 #include <string>
 #include <tuple>
@@ -43,6 +44,8 @@ constexpr idx_t MAX_RNA_SIZE = 10000;
 // constexpr idx_t INVALID_BASE = 30000;
 // constexpr idx_t NDX = 40000;
 
+constexpr score_t LOG_ZERO = -numeric_limits<score_t>::max();
+
 constexpr idx_t IDX_NOT_SET = -1;
 constexpr idx_t INVALID_BASE = -2;
 constexpr idx_t NDX = -3;
@@ -61,8 +64,6 @@ const ScoreVec limits = {0.0, 0.25, 0.5, 1.5, 3.0};
 // Define mapping from characters to indices.
 static int char2int[21] = {0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0, 3, 3};
-
-static score_t LOG_ZERO = -FLT_MIN;
 
 constexpr int b0 = 1;
 constexpr int b1 = 4;

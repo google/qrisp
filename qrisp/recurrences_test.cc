@@ -238,7 +238,7 @@ TEST_F(RecurrencesTest, EncodeDecodeTraceback) {
 }
 
 TEST_F(RecurrencesTest, FillTables) {
-  Structure rna(".......", "ACTCACT", {});
+  Structure rna(".......", "ACTCACT", {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0});
   const idx_t rna_size = rna.Size();
   // Create and fill dynamic programming tables.
   DPTable* scores = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
