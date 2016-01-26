@@ -29,7 +29,7 @@ namespace qrisp {
 
 using namespace std;
 
-typedef uint32_t idx_t;
+typedef int32_t idx_t;
 typedef double score_t;
 typedef const idx_t& CIR;
 

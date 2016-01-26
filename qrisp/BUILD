@@ -88,6 +88,9 @@ cc_library(
     name = "cluster",
     srcs = ["cluster.cc"],
     hdrs = ["cluster.h"],
+    deps = [
+        "//third_party/googlelog:glog",
+    ],
 )
 
 cc_library(

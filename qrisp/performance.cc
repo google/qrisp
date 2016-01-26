@@ -24,7 +24,7 @@ namespace qrisp {
 
 bool EstimatePerformanceOnHoldout(const Dataset& data,
                                   const Predictions& predictions,
-                                  const vector<int> cluster_sizes,
+                                  const vector<idx_t> cluster_sizes,
                                   PerformanceMetrics* performance) {
   if (data.size() == 0 || cluster_sizes.size() == 0 ||
       data.size() != predictions.size()) {
