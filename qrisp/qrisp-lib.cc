@@ -64,7 +64,7 @@ void CalculatePredictions(const FeatureVec& model, const Dataset& data,
   }
 }
 
-int ExtractClusterSizes(const Configuration& config, vector<int>* sizes) {
+int ExtractClusterSizes(const ConfigMessage& config, vector<int>* sizes) {
   sizes->assign(config.nbest_values().begin(), config.nbest_values().end());
   std::sort(sizes->begin(), sizes->end());
   std::sort(sizes->begin(), sizes->end());
@@ -73,7 +73,7 @@ int ExtractClusterSizes(const Configuration& config, vector<int>* sizes) {
 }
 
 void StartPrediction(const Dataset& dataset, const QRSPModel& model,
-                     const Configuration& config) {
+                     const ConfigMessage& config) {
   vector<int> cluster_sizes;
   const int nbest = ExtractClusterSizes(config, &cluster_sizes);
   LOG(INFO) << "Largest cluster size: " << nbest;
@@ -103,7 +103,7 @@ void StartPrediction(const Dataset& dataset, const QRSPModel& model,
 }
 
 void StartTraining(const Dataset& training_set, const Dataset& holdout_set,
-                   const QRSPModel& model, const Configuration& config) {
+                   const QRSPModel& model, const ConfigMessage& config) {
   CHECK(training_set.size() > 0) << "Empty training set.";
 
   vector<int> cluster_sizes;

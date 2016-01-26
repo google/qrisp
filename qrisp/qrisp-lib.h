@@ -26,10 +26,10 @@ using namespace std;
 namespace qrisp {
 
 void StartPrediction(const Dataset& dataset, const QRSPModel& model,
-                     const Configuration& config);
+                     const ConfigMessage& config);
 
 void StartTraining(const Dataset& training_set, const Dataset& holdout_set,
-                   const QRSPModel& model, const Configuration& config);
+                   const QRSPModel& model, const ConfigMessage& config);
 
 }  // namespace qrisp
 
