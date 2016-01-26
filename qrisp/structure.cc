@@ -36,8 +36,6 @@ Structure::Structure(const string& brackets, const string& seq,
   if (qual.size() > 0) {
     quality_.assign(qual.cbegin(), qual.cend());
   }
-  CHECK(pairings_.size() == size_ && sequence_.size() == size_ &&
-        (quality_.size() == size_ || quality_.size() == 0));
 }
 
 bool Structure::InitializeFromAsciiPb(const string& input) {
@@ -79,7 +77,7 @@ bool Structure::LoadPairingsFromVector(const vector<idx_t>& input) {
 bool Structure::LoadSequenceFromString(const string& input) {
   if (input.size() + 1 == size_) {
     sequence_.assign(size_, IDX_NOT_SET);
-    for (int i = 0; i < input.size(); i++) {
+    for (size_t i = 0; i < input.size(); i++) {
       idx_t base = input[i] - 65;
       CHECK(base <= 20);
       sequence_[i + 1] = char2int[base];
@@ -97,7 +95,7 @@ bool Structure::LoadSequenceFromVector(const vector<idx_t>& input) {
 }
 
 void Structure::ConvertToProto(StructureMessage* rna) const {
-  for (int i = 1; i < pairings_.size(); i++) {
+  for (size_t i = 1; i < pairings_.size(); i++) {
     auto* row = rna->add_rows();
     row->set_pos(i);
     row->set_pair(pairings_[i]);
@@ -108,7 +106,7 @@ void Structure::ConvertToProto(StructureMessage* rna) const {
 
 Tuple Structure::GetBasesAt(const Tuple& t) const {
   // const idx_t len= this->Size();
-  int i, j, k, l;
+  idx_t i, j, k, l;
   std::tie(i, j, k, l) = t;
   // if (!(i > 0 && (i < len || i == IDX_NOT_SET) &&
   //      j > 0 && (j < len || j == IDX_NOT_SET) &&
@@ -176,19 +174,24 @@ bool Structure::ContainsPseudoKnot() const {
 
 // This function performs some basic sanity checks.
 bool Structure::IsValidStructure() const {
-  const int len = this->Size();
+  const size_t len = this->Size();
   // Just following a convention.
   CHECK(this->pairings_[0] == IDX_NOT_SET);
   // At least one position has to be in the structure.
-  CHECK(len >= MIN_RNA_SIZE);
-  CHECK(len < MAX_RNA_SIZE);
+  if (len < MIN_RNA_SIZE || len > MAX_RNA_SIZE) {
+    return false;
+  }
   // Perform some sanity checks on the structure.
-  for (int i = 1; i < len; i++) {
-    if (pairings_[i] >= len) {
+  for (size_t i = 1; i < len; i++) {
+    const idx_t j = pairings_[i];
+    const idx_t ip = pairings_[j];
+    if (j >= len) {
+      return false;
+    }
+    if (j != 0 && i != ip) {
       return false;
     }
   }
-  // return !this->ContainsPseudoKnot();
   return true;
 }
 
@@ -197,12 +200,12 @@ bool Structure::IsValidStructure() const {
 void Structure::CalculateSubstructure(
     vector<Substructure>* result, vector<bool>* accessible_positions) const {
   result->clear();
-  const int len = this->Size();
+  const size_t len = this->Size();
   accessible_positions->resize(len, false);
   if (!this->IsValidStructure()) {
     return;
   }
-  for (int i = 1; i < len; i++) {
+  for (size_t i = 1; i < len; i++) {
     const idx_t pos = i;
     const idx_t pair = pairings_[pos];
     if (pair != 0 && pos < pair) {
@@ -211,7 +214,7 @@ void Structure::CalculateSubstructure(
       (*accessible_positions)[pos] = true;
       (*accessible_positions)[pair] = true;
       VLOG(1) << "Outer pair: " << pos << ", " << pair << endl;
-      for (int iter_pos = pos + 1; iter_pos < pair;) {
+      for (size_t iter_pos = pos + 1; iter_pos < pair;) {
         idx_t iter_pos_pair = pairings_[iter_pos];
         (*accessible_positions)[iter_pos] = true;
         if (iter_pos >= iter_pos_pair) {
@@ -240,7 +243,7 @@ void Structure::CalculateSubstructure(
 double PairwiseLoss(const Structure& a, const Structure& b) {
   CHECK(a.Size() == b.Size());
   double cur_loss = 0.0;
-  for (int i = 1; i < a.Size(); i++) {
+  for (size_t i = 1; i < a.Size(); i++) {
     if (a(i) != b(i)) {
       cur_loss += 1.0;
     }
@@ -251,7 +254,7 @@ double PairwiseLoss(const Structure& a, const Structure& b) {
 double HammingLoss(const Structure& a, const Structure& b) {
   CHECK(a.Size() == b.Size());
   double cur_loss = 0.0;
-  for (int i = 1; i < a.Size(); i++) {
+  for (size_t i = 1; i < a.Size(); i++) {
     if ((a(i) == 0 && b(i) != 0) || (a(i) != 0 && b(i) == 0)) {
       cur_loss += 1.0;
     }
@@ -262,7 +265,7 @@ double HammingLoss(const Structure& a, const Structure& b) {
 void PairingsToBrackets(const vector<idx_t>& pairings, string* brackets) {
   brackets->clear();
   brackets->resize(pairings.size() - 1, '.');
-  for (int i = 1; i < pairings.size(); i++) {
+  for (size_t i = 1; i < pairings.size(); i++) {
     if (i < pairings[i] && pairings[i] != 0) {
       (*brackets)[i - 1] = '(';
       (*brackets)[pairings[i] - 1] = ')';
@@ -272,7 +275,7 @@ void PairingsToBrackets(const vector<idx_t>& pairings, string* brackets) {
 
 void BracketsToPairings(const string& brackets, vector<idx_t>* pairings) {
   vector<idx_t> opening;
-  for (idx_t i = 0; i < brackets.size(); i++) {
+  for (size_t i = 0; i < brackets.size(); i++) {
     if (brackets[i] == '(') {
       opening.push_back(i + 1);
       continue;
@@ -291,7 +294,7 @@ bool operator==(const Structure& a, const Structure& b) {
   if (a.Size() != b.Size()) {
     return false;
   }
-  for (int i = 1; i < a.Size(); i++) {
+  for (size_t i = 1; i < a.Size(); i++) {
     if (a(i) != b(i) || a[i] != b[i] || (a.quality(i) != b.quality(i))) {
       return false;
     }
@@ -302,7 +305,7 @@ bool operator==(const Structure& a, const Structure& b) {
 bool operator==(const Substructure& a, const Substructure& b) {
   if (a.GetOuterPair() == b.GetOuterPair() &&
       a.GetNumberOfInnerPairs() == b.GetNumberOfInnerPairs()) {
-    for (int i = 0; i < a.GetNumberOfInnerPairs(); i++) {
+    for (size_t i = 0; i < a.GetNumberOfInnerPairs(); i++) {
       if (a.GetInnerPairAt(i) != b.GetInnerPairAt(i)) {
         return false;
       }

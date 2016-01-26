@@ -29,7 +29,7 @@
 #define message(fmt, ...)
 #endif
 
-DECLARE_bool(enable_quality_features);
+DEFINE_bool(enable_quality_features, true, "");
 
 namespace qrisp {
 

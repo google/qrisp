@@ -30,7 +30,7 @@
 #include "third_party/googleflags/include/gflags/gflags.h"
 #include "utils.h"
 
-DEFINE_bool(enable_quality_features, true, "");
+DECLARE_bool(enable_quality_features);
 
 DEFINE_bool(resume_training, true, "Uses stored training model, if present.");
 DEFINE_string(resume_model_fn, "", "Location of the split file.");
