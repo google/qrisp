@@ -1,5 +1,5 @@
 #include "experimental/users/fdb/qrsp/cluster.h"
-#include "experimental/users/fdb/qrsp/rna-structure.h"
+#include "experimental/users/fdb/qrsp/structure.h"
 
 #include "testing/base/public/gunit.h"
 

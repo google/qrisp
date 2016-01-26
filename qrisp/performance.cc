@@ -18,7 +18,7 @@
 #include "cluster.h"
 #include "dataset-utils.h"
 #include "performance.h"
-#include "rna-structure.h"
+#include "structure.h"
 
 namespace qrisp {
 

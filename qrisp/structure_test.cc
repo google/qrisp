@@ -22,7 +22,7 @@
 #include <gtest/gtest.h>
 
 #include "qrisp/proto/structure.pb.h"
-#include "rna-structure.h"
+#include "structure.h"
 #include "utils.h"
 
 namespace qrisp {

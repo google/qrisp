@@ -24,8 +24,8 @@
 #include "qrisp-lib.h"
 #include "recurrences-nbest.h"
 #include "recurrences.h"
-#include "rna-structure.h"
 #include "sgd.h"
+#include "structure.h"
 #include "utils.h"
 
 using namespace std;

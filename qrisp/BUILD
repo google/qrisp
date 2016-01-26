@@ -6,18 +6,18 @@ cc_library(
     srcs = ["dataset-utils.cc"],
     hdrs = ["dataset-utils.h"],
     deps = [
-        "//qrisp:rna-structure",
+        "//qrisp:structure",
         "//qrisp:utils",
-        "//qrisp/proto:parameters_proto",
         "//qrisp/proto:config_proto",
+        "//qrisp/proto:parameters_proto",
         "//qrisp/proto:structure_proto",
     ],
 )
 
 cc_library(
-    name = "rna-structure",
-    srcs = ["rna-structure.cc"],
-    hdrs = ["rna-structure.h"],
+    name = "structure",
+    srcs = ["structure.cc"],
+    hdrs = ["structure.h"],
     deps = [
         "//qrisp:utils",
         "//qrisp/proto:structure_proto",
@@ -31,7 +31,7 @@ cc_library(
     deps = [
         "//qrisp:cluster",
         "//qrisp:dataset-utils",
-        "//qrisp:rna-structure",
+        "//qrisp:structure",
         "//qrisp:utils",
         "//qrisp/proto:config_proto",
     ],
@@ -43,10 +43,10 @@ cc_library(
     hdrs = ["model.h"],
     deps = [
         "//qrisp:plif",
-        "//qrisp:rna-structure",
-        "//third_party/googleflags:gflags",
+        "//qrisp:structure",
         "//qrisp:utils",
         "//qrisp/proto:parameters_proto",
+        "//third_party/googleflags:gflags",
     ],
 )
 
@@ -101,8 +101,8 @@ cc_library(
         "//qrisp:model",
         "//qrisp:performance",
         "//qrisp:recurrences",
-        "//qrisp:rna-structure",
         "//qrisp:sgd",
+        "//qrisp:structure",
         "//qrisp:utils",
         "//qrisp/proto:parameters_proto",
         "//qrisp/proto:structure_proto",
@@ -153,41 +153,41 @@ cc_binary(
 #
 
 cc_test(
-    name = "rna-structure_test",
-    srcs = ["rna-structure_test.cc"],
-    deps = [
-        "//qrisp:rna-structure",
-        "//qrisp:utils",
-        "//third_party/googletest",
-    ],
+    name = "structure_test",
+    srcs = ["structure_test.cc"],
     linkopts = [
         "-lpthread",
+    ],
+    deps = [
+        "//qrisp:structure",
+        "//qrisp:utils",
+        "//third_party/googletest",
     ],
 )
 
 cc_test(
     name = "plif_test",
     srcs = ["plif_test.cc"],
+    linkopts = [
+        "-lpthread",
+    ],
     deps = [
         "//qrisp:plif",
         "//qrisp:utils",
         "//third_party/googletest",
-    ],
-    linkopts = [
-        "-lpthread",
     ],
 )
 
 cc_test(
     name = "recurrences_test",
     srcs = ["recurrences_test.cc"],
+    linkopts = [
+        "-lpthread",
+    ],
     deps = [
         "//qrisp:learning-utils",
         "//qrisp:recurrences",
         "//third_party/googletest",
-    ],
-    linkopts = [
-        "-lpthread",
     ],
 )
 
@@ -203,4 +203,3 @@ cc_test(
 #        "//qrisp/proto:structure_proto",
 #    ],
 #)
-

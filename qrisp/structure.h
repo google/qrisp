@@ -16,8 +16,8 @@
 // This library contains all classes and algorithms needed for the
 // representation of one or more RNA secondary structures.
 
-#ifndef QRISP_RNA_STRUCTURE_H__
-#define QRISP_RNA_STRUCTURE_H__
+#ifndef QRISP_STRUCTURE_H__
+#define QRISP_STRUCTURE_H__
 
 #include <glog/logging.h>
 #include <string>
@@ -187,4 +187,4 @@ class Substructure {
 };
 
 }  // namespace qrisp
-#endif  // QRISP_RNA_STRUCTURE_H__
+#endif  // QRISP_STRUCTURE_H__

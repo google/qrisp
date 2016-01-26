@@ -16,7 +16,7 @@
 #ifndef QRISP_MODEL_H_
 #define QRISP_MODEL_H_
 
-#include "rna-structure.h"
+#include "structure.h"
 #include "utils.h"
 
 #include <vector>

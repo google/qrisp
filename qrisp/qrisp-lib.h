@@ -18,7 +18,7 @@
 
 #include "dataset-utils.h"
 #include "qrisp/proto/config.pb.h"
-#include "rna-structure.h"
+#include "structure.h"
 #include "utils.h"
 
 using namespace std;

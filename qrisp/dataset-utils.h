@@ -25,7 +25,7 @@
 #include "qrisp/proto/config.pb.h"
 #include "qrisp/proto/parameters.pb.h"
 #include "qrisp/proto/structure.pb.h"
-#include "rna-structure.h"
+#include "structure.h"
 #include "utils.h"
 
 namespace qrisp {

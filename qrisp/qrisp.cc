@@ -25,8 +25,8 @@
 #include "qrisp/proto/config.pb.h"
 #include "recurrences-nbest.h"
 #include "recurrences.h"
-#include "rna-structure.h"
 #include "sgd.h"
+#include "structure.h"
 #include "third_party/googleflags/include/gflags/gflags.h"
 #include "utils.h"
 
