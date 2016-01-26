@@ -22,13 +22,15 @@
 #include <gtest/gtest.h>
 #include "learning-utils.h"
 #include "model.h"
+#include "third_party/googleflags/include/gflags/gflags.h"
 #include "utils.h"
+
+DECLARE_bool(enable_quality_features);
 
 namespace qrisp {
 namespace {
 
 using fdb::learning::CalculateSparseScalarProduct;
-using fdb::learning::CalculateFeatures;
 
 constexpr const float kEpsilon = 1e-6;
 
@@ -49,9 +51,9 @@ TEST_F(RecurrencesTest, InitTables) {
   // Create and fill dynamic programming tables.
   DPTable score(NUM_STATES, table_size, table_size, LOG_ZERO);
   DPTable traceback(NUM_STATES, table_size, table_size, LOG_ZERO);
-  for (size_t i = 0; i < NUM_STATES; i++) {
-    for (size_t j = 0; j < table_size; j++) {
-      for (size_t k = 0; k < table_size; k++) {
+  for (idx_t i = 0; i < NUM_STATES; i++) {
+    for (idx_t j = 0; j < table_size; j++) {
+      for (idx_t k = 0; k < table_size; k++) {
         EXPECT_NEAR(score(i, j, k), LOG_ZERO, kEpsilon);
         EXPECT_NEAR(traceback(i, j, k), LOG_ZERO, kEpsilon);
       }
@@ -60,30 +62,30 @@ TEST_F(RecurrencesTest, InitTables) {
 }
 
 TEST_F(RecurrencesTest, UpdateTables) {
-  uint32_t table_size = 4;
+  idx_t table_size = 4;
   // Create and fill dynamic programming tables.
   DPTable score(NUM_STATES, table_size, table_size, LOG_ZERO);
   DPTable traceback(NUM_STATES, table_size, table_size, LOG_ZERO);
-  for (int i = 0; i < NUM_STATES; i++) {
-    for (size_t j = 0; j < table_size; j++) {
-      for (size_t k = 0; k < table_size; k++) {
+  for (idx_t i = 0; i < NUM_STATES; i++) {
+    for (idx_t j = 0; j < table_size; j++) {
+      for (idx_t k = 0; k < table_size; k++) {
         EXPECT_NEAR(score(i, j, k), LOG_ZERO, kEpsilon);
         EXPECT_NEAR(traceback(i, j, k), LOG_ZERO, kEpsilon);
       }
     }
   }
-  for (int i = 0; i < NUM_STATES; i++) {
-    for (size_t j = 0; j < table_size; j++) {
-      for (size_t k = 0; k < table_size; k++) {
+  for (idx_t i = 0; i < NUM_STATES; i++) {
+    for (idx_t j = 0; j < table_size; j++) {
+      for (idx_t k = 0; k < table_size; k++) {
         double new_score = (i + j) % 2 == 0 ? k * 1.0 : k * -1.0;
         double new_trace = (i + j) % 2 == 0 ? 55.0 : 2.0;
         UpdateMax(&score, &traceback, i, j, k, new_score, new_trace);
       }
     }
   }
-  for (int i = 0; i < NUM_STATES; i++) {
-    for (size_t j = 0; j < table_size; j++) {
-      for (size_t k = 0; k < table_size; k++) {
+  for (idx_t i = 0; i < NUM_STATES; i++) {
+    for (idx_t j = 0; j < table_size; j++) {
+      for (idx_t k = 0; k < table_size; k++) {
         EXPECT_NEAR(score(i, j, k), (i + j) % 2 == 0 ? k * 1.0 : k * -1.0,
                     kEpsilon);
         EXPECT_NEAR(traceback(i, j, k), (i + j) % 2 == 0 ? 55.0 : 2.0,
@@ -91,18 +93,18 @@ TEST_F(RecurrencesTest, UpdateTables) {
       }
     }
   }
-  for (int i = 0; i < NUM_STATES; i++) {
-    for (size_t j = 0; j < table_size; j++) {
-      for (size_t k = 0; k < table_size; k++) {
+  for (idx_t i = 0; i < NUM_STATES; i++) {
+    for (idx_t j = 0; j < table_size; j++) {
+      for (idx_t k = 0; k < table_size; k++) {
         double new_score = (i + j) % 2 == 0 ? k * 10.0 : k * -0.1;
         double new_trace = (i + j) % 2 == 0 ? 33.0 : 4.0;
         UpdateMax(&score, &traceback, i, j, k, new_score, new_trace);
       }
     }
   }
-  for (int i = 0; i < NUM_STATES; i++) {
-    for (size_t j = 0; j < table_size; j++) {
-      for (size_t k = 0; k < table_size; k++) {
+  for (idx_t i = 0; i < NUM_STATES; i++) {
+    for (idx_t j = 0; j < table_size; j++) {
+      for (idx_t k = 0; k < table_size; k++) {
         if (k > 0) {
           EXPECT_NEAR(score(i, j, k), (i + j) % 2 == 0 ? k * 10.0 : k * -0.1,
                       kEpsilon);
@@ -124,9 +126,9 @@ TEST_F(RecurrencesTest, UpdateTablesViaFunctor) {
   // Create and fill dynamic programming tables.
   DPTable score(NUM_STATES, table_size, table_size, LOG_ZERO);
   DPTable traceback(NUM_STATES, table_size, table_size, LOG_ZERO);
-  for (int i = 0; i < NUM_STATES; i++) {
-    for (size_t j = 0; j < table_size; j++) {
-      for (size_t k = 0; k < table_size; k++) {
+  for (idx_t i = 0; i < NUM_STATES; i++) {
+    for (idx_t j = 0; j < table_size; j++) {
+      for (idx_t k = 0; k < table_size; k++) {
         EXPECT_NEAR(score(i, j, k), LOG_ZERO, kEpsilon);
         EXPECT_NEAR(traceback(i, j, k), LOG_ZERO, kEpsilon);
       }
@@ -137,18 +139,18 @@ TEST_F(RecurrencesTest, UpdateTablesViaFunctor) {
                      std::placeholders::_2, std::placeholders::_3,
                      std::placeholders::_4, std::placeholders::_5);
 
-  for (int i = 0; i < NUM_STATES; i++) {
-    for (int j = 0; j < table_size; j++) {
-      for (int k = 0; k < table_size; k++) {
+  for (idx_t i = 0; i < NUM_STATES; i++) {
+    for (idx_t j = 0; j < table_size; j++) {
+      for (idx_t k = 0; k < table_size; k++) {
         double new_score = (i + j) % 2 == 0 ? k * 1.0 : k * -1.0;
         double new_trace = (i + j) % 2 == 0 ? 55.0 : 2.0;
         UPDATE(i, j, k, new_score, new_trace);
       }
     }
   }
-  for (int i = 0; i < NUM_STATES; i++) {
-    for (size_t j = 0; j < table_size; j++) {
-      for (size_t k = 0; k < table_size; k++) {
+  for (idx_t i = 0; i < NUM_STATES; i++) {
+    for (idx_t j = 0; j < table_size; j++) {
+      for (idx_t k = 0; k < table_size; k++) {
         EXPECT_NEAR(score(i, j, k), (i + j) % 2 == 0 ? k * 1.0 : k * -1.0,
                     kEpsilon);
         EXPECT_NEAR(traceback(i, j, k), (i + j) % 2 == 0 ? 55.0 : 2.0,
@@ -239,7 +241,7 @@ TEST_F(RecurrencesTest, EncodeDecodeTraceback) {
 }
 
 TEST_F(RecurrencesTest, FillTables) {
-  Structure rna(".......", "ACTCACT", {});
+  Structure rna(".......", "ACTCACT", {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0});
   const idx_t rna_size = rna.Size();
   // Create and fill dynamic programming tables.
   DPTable* scores = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
@@ -254,7 +256,8 @@ TEST_F(RecurrencesTest, FillTables) {
 }
 
 TEST_F(RecurrencesTest, PerformTraceback) {
-  Structure rna("...(((....)))......", "ACCATCTCCCGAACCAGCT", {});
+  vector<score_t> q(19, 0.0);
+  Structure rna("...(((....)))......", "ACCATCTCCCGAACCAGCT", q);
   const idx_t rna_size = rna.Size();
   DPTable* scores = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   DPTable* traceback = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
@@ -271,7 +274,8 @@ TEST_F(RecurrencesTest, PerformTraceback) {
 }
 
 TEST_F(RecurrencesTest, DecodeBestPath) {
-  Structure rna("...(((....)))......", "ACCATCTCCCGAACCAGCT", {});
+  vector<score_t> q(19, 0.0);
+  Structure rna("...(((....)))......", "ACCATCTCCCGAACCAGCT", q);
   const idx_t rna_size = rna.Size();
   DPTable* scores = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
   DPTable* traceback = new DPTable(NUM_STATES, rna_size, rna_size, LOG_ZERO);
@@ -284,7 +288,7 @@ TEST_F(RecurrencesTest, DecodeBestPath) {
   PerformTraceback(*traceback, rna_size, &result);
   string brackets;
   PairingsToBrackets(result, &brackets);
-  Structure dec_rna(brackets, "ACCATCTCCCGAACCAGCT", {});
+  Structure dec_rna(brackets, "ACCATCTCCCGAACCAGCT", q);
   FeatureVec features;
   CalculateFeatures(dec_rna, &features);
   // cout << "score best path: " << scores->Get(DO_OUTER, 0, rna_size - 1) <<
@@ -425,11 +429,11 @@ TEST_F(RecurrencesTest, DecodeBestPathRandWithLoss) {
   int count = 0;
   for_each(index.begin(), index.end(),
            [&count](idx_t& i) { return i = count++; });
-  for (int i = 1; i < index.size(); i++) {
+  for (idx_t i = 1; i < index.size(); i++) {
     cout << setw(3) << index[i] << " ";
   }
   cout << endl;
-  for (int i = 1; i < index.size(); i++) {
+  for (idx_t i = 1; i < index.size(); i++) {
     cout << setw(3) << result[i] << " ";
   }
   cout << endl;
@@ -460,7 +464,7 @@ TEST_F(RecurrencesTest, DecodeBestPathRandLarge) {
   FeatureVec model;
   int ctr = 1;
   auto GetValue = [&ctr]() { return drand48(); };
-  for (int i = 0; i < 906; i++) {
+  for (idx_t i = 0; i < 906; i++) {
     model.insert(make_pair(i, GetValue()));
   }
   const DECODING_MODE vmode = LOSS_DISABLED;
@@ -508,7 +512,7 @@ TEST_F(RecurrencesTest, DecodeBestPathRandLargeLoss) {
   FeatureVec model;
   int ctr = 1;
   auto GetValue = [&ctr]() { return drand48(); };
-  for (int i = 0; i < 906; i++) {
+  for (idx_t i = 0; i < 906; i++) {
     model.insert(make_pair(i, GetValue()));
   }
   const DECODING_MODE vmode = LOSS_ENABLED;

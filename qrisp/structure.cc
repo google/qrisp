@@ -35,6 +35,7 @@ Structure::Structure(const string& brackets, const string& seq,
   LoadSequenceFromString(seq);
   if (qual.size() > 0) {
     quality_.assign(qual.cbegin(), qual.cend());
+    quality_.emplace(quality_.begin(), INVALID_QUALITY);
   }
 }
 

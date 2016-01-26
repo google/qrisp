@@ -24,8 +24,8 @@
 
 namespace qrisp {
 
-void UpdateMax(DPTable* t1, DPTable* t2, const int i, const int j, const int k,
-               const double v1, const double v2) {
+void UpdateMax(DPTable* t1, DPTable* t2, const idx_t i, const idx_t j,
+               const idx_t k, const double v1, const double v2) {
   if (v1 > (*t1)(i, j, k)) {
     (*t1)(i, j, k) = v1;
     CHECK(v2 >= 0);
@@ -37,8 +37,8 @@ void UpdateMax(DPTable* t1, DPTable* t2, const int i, const int j, const int k,
 // pairs and free residues.
 // TODO(fdb): Factor out the different cases to separate functions and then use
 // a function pointer defined outside the loop.
-std::tuple<score_t, score_t> LossFunctor::GetLossTerms(const int i,
-                                                       const int j) {
+std::tuple<score_t, score_t> LossFunctor::GetLossTerms(const idx_t i,
+                                                       const idx_t j) {
   double pair = 0.0;
   double single = 0.0;
   if (dmode == LOSS_ENABLED) {
@@ -83,7 +83,7 @@ void FillTables(const Structure& input, DECODING_MODE vmode, double loss_factor,
   auto OuterUnpaired = BIND_SC(&OuterUnpairedWeights);
   auto Single = BIND_SC(&SingleWeights);
   const idx_t rna_size = input.Size();
-  const size_t length = rna_size - 1;
+  const idx_t length = rna_size - 1;
   // Create the functor for losses based on the input structure.
   LossFunctor* loss_functor = new LossFunctor(input, vmode, loss_factor);
   auto UPDATE = bind(UpdateMax, scores, traceback, std::placeholders::_1,
@@ -99,10 +99,10 @@ void FillTables(const Structure& input, DECODING_MODE vmode, double loss_factor,
   // Some scoring functions do not need positional information. This tuple
   // provides neutral positional information for these cases.
   const Tuple ZERO = Tuple(0, 0, 0, 0);
-  const int D = 5;
+  const idx_t D = 5;
   score_t sum = 0.0;
-  for (size_t m = 0; m <= length; m++) {
-    for (size_t i = 0, j = m; j <= length; i++, j++) {
+  for (idx_t m = 0; m <= length; m++) {
+    for (idx_t i = 0, j = m; j <= length; i++, j++) {
       double pair = 0;
       double single = 0;
       std::tie(pair, single) = loss_functor->GetLossTerms(i, j);
@@ -123,7 +123,7 @@ void FillTables(const Structure& input, DECODING_MODE vmode, double loss_factor,
                 (*scores)(DO_OUTER, i + 1, j);
           UPDATE(DO_OUTER, i, j, sum, EncodeTB(1, 0));
         }
-        for (size_t ip = i + 2; ip <= length; ip++) {
+        for (idx_t ip = i + 2; ip <= length; ip++) {
           sum = OuterBranch(ZERO) + (*scores)(DO_HELIX, i, ip) +
                 (*scores)(DO_OUTER, ip, j);
           UPDATE(DO_OUTER, i, j, sum, EncodeTB(ip, j));
@@ -133,18 +133,18 @@ void FillTables(const Structure& input, DECODING_MODE vmode, double loss_factor,
       if (i == j) {
         UPDATE(DO_MULTI + 2, i, j, 0.0, EncodeTB(0, 0));
       }
-      for (int n = 0; n <= 2; n++) {
+      for (idx_t n = 0; n <= 2; n++) {
         if (i < j) {
           sum = single + MultiUnpaired(mt3(i + 1, j, i + 1)) +
                 (*scores)(DO_MULTI + n, i + 1, j);
           UPDATE(DO_MULTI + n, i, j, sum, EncodeTB(1, 0));
         }
         if (i > 0 && j < length) {
-          for (size_t jp = i + 2; jp <= j; jp++) {
+          for (idx_t jp = i + 2; jp <= j; jp++) {
             sum = MultiPaired(mt2(i, j)) +
                   MultiMismatch(mt(jp, i + 1, jp + 1, i)) +
                   (*scores)(DO_HELIX, i, jp) +
-                  (*scores)(DO_MULTI + min(2, n + 1), jp, j);
+                  (*scores)(DO_MULTI + min(idx_t(2), n + 1), jp, j);
             UPDATE(DO_MULTI + n, i, j, sum, EncodeTB(jp, 0));
           }
         }
@@ -154,11 +154,11 @@ void FillTables(const Structure& input, DECODING_MODE vmode, double loss_factor,
         double hairpin_loss = loss_functor->PairingLoss(i, j);
         UPDATE(DO_LOOP, i, j, hairpin_loss + Hairpin(mt(i, j + 1, i + 1, j)),
                EncodeTB(0, 0));
-        for (int li = 0; li <= MAX_LOOP_SIZE; li++) {
-          for (int lj = 0; li + lj <= MAX_LOOP_SIZE; lj++) {
+        for (idx_t li = 0; li <= MAX_LOOP_SIZE; li++) {
+          for (idx_t lj = 0; li + lj <= MAX_LOOP_SIZE; lj++) {
             if (li + lj > 0) {
-              int ip = i + li;
-              int jp = j - lj;
+              idx_t ip = i + li;
+              idx_t jp = j - lj;
               if (!(ip + 2 <= jp)) {
                 continue;
               }
@@ -180,7 +180,7 @@ void FillTables(const Structure& input, DECODING_MODE vmode, double loss_factor,
 
       // DO_HELIX
       if (i > 0 && j < length) {
-        for (int n = 1; n <= D; n++) {
+        for (idx_t n = 1; n <= D; n++) {
           if (i + 2 <= j) {
             score_t score0 = HelixStacking(mt(i, j + 1, i + 1, j)) + pair +
                              HelixBasePair(mt2(i + 1, j));
@@ -206,9 +206,9 @@ void FillTables(const Structure& input, DECODING_MODE vmode, double loss_factor,
 }
 
 void PrintTable(const DPTable& t) {
-  for (int s = 0; s < 8; s++) {
-    for (int i = 0; i < t.GetSize2(); i++) {
-      for (int j = 0; j < t.GetSize3(); j++) {
+  for (idx_t s = 0; s < 8; s++) {
+    for (idx_t i = 0; i < t.GetSize2(); i++) {
+      for (idx_t j = 0; j < t.GetSize3(); j++) {
         if (t.Get(s, i, j) < -9999.0) {
           printf("%.03f ", -9999.0);
         } else {
@@ -221,25 +221,25 @@ void PrintTable(const DPTable& t) {
   }
 }
 
-void PerformTraceback(const DPTable& trace, const int& rna_size,
+void PerformTraceback(const DPTable& trace, const idx_t& rna_size,
                       vector<idx_t>* result) {
   // PrintTable(trace);
   result->clear();
   result->resize(rna_size, 0);
   (*result)[0] = IDX_NOT_SET;
-  queue<std::tuple<int, int, int>> path;
+  queue<std::tuple<idx_t, idx_t, idx_t>> path;
   // Auxiliary function that saves some code.
-  auto push_triple = [&](const int& x, const int& y, const int& z) {
+  auto push_triple = [&](const idx_t& x, const idx_t& y, const idx_t& z) {
     path.push(std::make_tuple(x, y, z));
   };
   push_triple(DO_OUTER, 0, rna_size - 1);
   // Enter the main loop to decode the best structure.
   while (!path.empty()) {
-    int v, i, j;
+    idx_t v, i, j;
     std::tie(v, i, j) = path.front();
     message("Front triple: (%d, %d, %d)\n", v, i, j);
     path.pop();
-    int p, k;
+    idx_t p, k;
     std::tie(p, k) = DecodeTraceback(trace.Get(v, i, j), rna_size);
     message("Traceback tuple: (%d, %d)\n", p, k);
     CHECK(i >= 0);
@@ -305,7 +305,7 @@ void PerformTraceback(const DPTable& trace, const int& rna_size,
           push_triple(v, i + 1, j);
         } else if (p >= 2) {
           push_triple(DO_HELIX, i, p);
-          push_triple(DO_MULTI + min(2, v - DO_MULTI + 1), p, j);
+          push_triple(DO_MULTI + min(idx_t(2), v - DO_MULTI + 1), p, j);
         }
         break;
 
