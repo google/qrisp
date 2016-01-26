@@ -39,9 +39,13 @@ typedef map<string, Structure> Dataset;
 
 constexpr idx_t MIN_RNA_SIZE = 6;
 constexpr idx_t MAX_RNA_SIZE = 10000;
-constexpr idx_t IDX_NOT_SET = 20000;
-constexpr idx_t INVALID_BASE = 30000;
-constexpr idx_t NDX = 40000;
+// constexpr idx_t IDX_NOT_SET = 20000;
+// constexpr idx_t INVALID_BASE = 30000;
+// constexpr idx_t NDX = 40000;
+
+constexpr idx_t IDX_NOT_SET = -1;
+constexpr idx_t INVALID_BASE = -2;
+constexpr idx_t NDX = -3;
 
 constexpr score_t INVALID_QUALITY = -1.0;
 
@@ -58,7 +62,7 @@ const ScoreVec limits = {0.0, 0.25, 0.5, 1.5, 3.0};
 static int char2int[21] = {0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0,
                            0, 0, 0, 0, 0, 0, 0, 0, 3, 3};
 
-static score_t LOG_ZERO = FLT_MIN;
+static score_t LOG_ZERO = -FLT_MIN;
 
 constexpr int b0 = 1;
 constexpr int b1 = 4;

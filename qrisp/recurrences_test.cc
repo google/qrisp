@@ -28,7 +28,6 @@ namespace qrisp {
 namespace {
 
 using fdb::learning::CalculateSparseScalarProduct;
-using fdb::learning::CalculateFeatures;
 
 constexpr const float kEpsilon = 1e-6;
 
