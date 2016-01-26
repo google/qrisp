@@ -90,6 +90,7 @@ cc_library(
     hdrs = ["cluster.h"],
     deps = [
         "//third_party/googlelog:glog",
+        "//qrisp:utils",
     ],
 )
 
