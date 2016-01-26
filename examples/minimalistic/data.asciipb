@@ -1,0 +1,65 @@
+item {
+  id: 'r1'
+  structure {
+    rows { pos: 1 pair: 8 base: 1 score: 0.1 }
+    rows { pos: 2 pair: 7 base: 2 score: 0.1 }
+    rows { pos: 3 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 4 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 5 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 6 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 7 pair: 2 base: 1 score: 0.1 }
+    rows { pos: 8 pair: 1 base: 2 score: 0.1 }
+  }
+}
+item {
+  id: 'r2'
+  structure {
+    rows { pos: 1 pair: 8 base: 2 score: 0.1 }
+    rows { pos: 2 pair: 7 base: 2 score: 0.1 }
+    rows { pos: 3 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 4 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 5 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 6 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 7 pair: 2 base: 1 score: 0.1 }
+    rows { pos: 8 pair: 1 base: 1 score: 0.1 }
+  }
+}
+item {
+  id: 'r3'
+  structure {
+    rows { pos: 1 pair: 8 base: 2 score: 0.1 }
+    rows { pos: 2 pair: 7 base: 2 score: 0.1 }
+    rows { pos: 3 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 4 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 5 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 6 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 7 pair: 2 base: 1 score: 0.1 }
+    rows { pos: 8 pair: 1 base: 1 score: 0.1 }
+  }
+}
+item {
+  id: 'r4'
+  structure {
+    rows { pos: 1 pair: 8 base: 2 score: 0.1 }
+    rows { pos: 2 pair: 7 base: 2 score: 0.1 }
+    rows { pos: 3 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 4 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 5 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 6 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 7 pair: 2 base: 1 score: 0.1 }
+    rows { pos: 8 pair: 1 base: 1 score: 0.1 }
+  }
+}
+item {
+  id: 'r5'
+  structure {
+    rows { pos: 1 pair: 8 base: 2 score: 0.1 }
+    rows { pos: 2 pair: 7 base: 2 score: 0.1 }
+    rows { pos: 3 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 4 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 5 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 6 pair: 0 base: 0 score: 0.1 }
+    rows { pos: 7 pair: 2 base: 1 score: 0.1 }
+    rows { pos: 8 pair: 1 base: 1 score: 0.1 }
+  }
+}

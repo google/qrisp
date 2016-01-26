@@ -65,11 +65,15 @@ void CalculatePredictions(const FeatureVec& model, const Dataset& data,
 }
 
 int ExtractClusterSizes(const ConfigMessage& config, vector<int>* sizes) {
-  sizes->assign(config.nbest_values().begin(), config.nbest_values().end());
-  std::sort(sizes->begin(), sizes->end());
-  std::sort(sizes->begin(), sizes->end());
-  sizes->erase(std::unique(sizes->begin(), sizes->end()), sizes->end());
-  return sizes->back();
+  if (config.nbest_values_size() > 0) {
+    sizes->assign(config.nbest_values().begin(), config.nbest_values().end());
+    std::sort(sizes->begin(), sizes->end());
+    std::sort(sizes->begin(), sizes->end());
+    sizes->erase(std::unique(sizes->begin(), sizes->end()), sizes->end());
+    return sizes->back();
+  }
+  sizes->assign(1, 1);
+  return 1;
 }
 
 void StartPrediction(const Dataset& dataset, const QRSPModel& model,

@@ -45,8 +45,8 @@ using ::google::protobuf::util::error::INVALID_ARGUMENT;
 using ::google::protobuf::util::error::OUT_OF_RANGE;
 
 namespace {
-// TODO(fdb): Some preliminary checks. Add more and use proto inspection
-// instead
+
+// TODO(fdb): Some preliminary checks. Add more and use proto inspection instead
 // of nasty "if blah return blub".
 Status ValidateConfigMessage(const qrisp::ConfigMessage& config) {
   if (config.learning_rate() <= 0.0 || config.learning_rate() > 1.0) {
@@ -77,8 +77,7 @@ int main(int argc, char** argv) {
   qrisp::ConfigMessage config;
   LoadProtoFromFile(FLAGS_configuration_file, &config);
 
-  LOG(INFO) << "Validating ConfigMessage.." << config.DebugString();
-
+  LOG(INFO) << "Validating ConfigMessage..";
   const auto status = ValidateConfigMessage(config);
   if (!status.ok()) {
     LOG(ERROR) << status;
@@ -116,7 +115,7 @@ int main(int argc, char** argv) {
 
   // Load existing model if given.
   qrisp::QRSPModel model;
-  if (config.pretrained_model_fn().empty()) {
+  if (!config.pretrained_model_fn().empty()) {
     qrisp::LoadProtoFromFile(config.pretrained_model_fn(), &model);
   }
 
