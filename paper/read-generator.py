@@ -7,6 +7,9 @@ import random
 
 jp = os.path.join
 
+# Enable if you want to see some debug output.
+DEBUG = False
+
 # V1 in paired domains.
 # S1 in unpaired areas.
 kReadLength = 60
@@ -37,7 +40,6 @@ def generateReads(seq, struct, v1_fh, s1_fh):
   """
   """
   for i, s in enumerate(struct):
-    print i
     if s == 1:
       dsym = 'v'
       fh = v1_fh
@@ -49,7 +51,7 @@ def generateReads(seq, struct, v1_fh, s1_fh):
       e = min(b + kReadLength + random.randint(-kReadLengthVariability, kReadLengthVariability), len(seq)) 
       if (e - b) >= kMinReadLength:
         read = seq[b:e]
-        if __debug__:
+        if DEBUG:
           print "".join([['|', ' '][p==0] for p in struct])
           print dsym * (b-1) + read
         fh.write("%s\n" % read)
