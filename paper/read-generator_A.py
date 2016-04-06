@@ -5,7 +5,7 @@ import sys
 import glob
 import random
 import math
-path = '/Users/antonijaburcul/qrfp-paper/qrisp/examples/paper/partial_bpseq_rfam-12.0/'
+path = 'partial_bpseq_rfam-12.0/'
 jp = os.path.join
 
 def readBpseq(bpseq_fn):
@@ -85,7 +85,7 @@ def NucTransform(nuc):
         return 3
 
 allfiles = glob.glob(path + 'RF*.bpseq')
-output_dir = '/Users/antonijaburcul/qrfp-paper/qrisp/paper/'
+output_dir = ''
 training_data = open(jp(output_dir, "Rfam-trainingdata.txt"), "w")
 ReadCoverage_list = []
 StructTags = []
